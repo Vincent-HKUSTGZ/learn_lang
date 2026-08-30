@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const lessons = [
-  { id: '005', title: '地道法语积累005', french: 'Le jardin est si joli', creator: 'ella entwistle', level: '初级', topic: '法国乡村生活', minutes: 13, progress: 0, accent: 'from-[#d8c3df] via-[#8c75a6] to-[#51476d]', art: '🌿' },
+  { id: '005', title: '地道法语积累005', french: 'Le jardin est si joli', creator: 'ella entwistle', level: '初级', topic: '法国乡村生活', minutes: 13, progress: 0, thumbnail: 'https://i.ytimg.com/vi/sRsyn7P3wKA/hqdefault.jpg' },
 ];
 
 const filters = ['全部', '初级'];
@@ -60,8 +60,9 @@ export default function Home() {
       </header>
 
       <section id="top" className="relative overflow-hidden border-b border-[#102c3d]/10">
-        <div className="absolute inset-x-0 top-0 h-full opacity-10"><img src="./course-library-reference.png" alt="" className="h-full w-full object-cover object-top" /></div>
         <div className="paper-grid absolute inset-0 opacity-40" />
+        <div className="absolute -left-24 top-20 size-72 rounded-full bg-[#efbdad]/25 blur-3xl" />
+        <div className="absolute -right-16 -top-20 size-96 rounded-full bg-[#b8d0ce]/35 blur-3xl" />
         <div className="relative mx-auto grid max-w-[1440px] gap-9 px-5 py-14 sm:px-8 md:py-20 lg:grid-cols-[1.1fr_.9fr] lg:px-12 lg:py-24">
           <div className="max-w-3xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c74438]/20 bg-white/65 px-3 py-1.5 text-xs font-semibold tracking-wide text-[#a8342c] shadow-sm backdrop-blur"><Sparkles className="size-3.5" /> 每天 15 分钟，听懂真实法语</div>
@@ -70,15 +71,21 @@ export default function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-3"><Button className="h-12 rounded-full bg-[#123b50] px-6 text-white hover:bg-[#0c2c3d]" onClick={() => document.querySelector('#courses')?.scrollIntoView({ behavior: 'smooth' })}><Play className="size-4 fill-current" /> 开始第一课</Button><span className="ml-2 text-sm text-[#6c756f]">无需注册 · 进度保存在本机</span></div>
           </div>
           <div className="relative mx-auto w-full max-w-[520px] self-end lg:mx-0 lg:justify-self-end">
-            <div className="rotate-[-1.5deg] rounded-[26px] border border-[#123b50]/15 bg-[#fffdf7] p-3 shadow-[0_28px_80px_rgba(18,59,80,.16)]">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[18px] bg-gradient-to-br from-[#bfd1d8] to-[#486a75]">
-                <img src="./course-library-reference.png" alt="法语 Vlog 课程示例" className="h-full w-full scale-[1.7] object-cover object-[20%_76%] mix-blend-multiply" /><div className="absolute inset-0 bg-gradient-to-t from-[#123b50]/85 via-transparent to-transparent" />
-                <button type="button" className="absolute inset-0 m-auto grid size-16 place-items-center rounded-full border border-white/50 bg-white/90 text-[#c74438] shadow-xl transition hover:scale-105" aria-label="播放课程预览"><Play className="ml-1 size-6 fill-current" /></button>
-                  <div className="absolute inset-x-5 bottom-5 text-white"><p className="mb-1 text-xs font-bold uppercase tracking-[.18em] text-white/70">本期慢速 Vlog</p><p className="font-display text-2xl">Le jardin est si joli</p></div>
+            <div className="overflow-hidden rounded-[28px] border border-[#123b50]/12 bg-[#fffdf8] shadow-[0_30px_90px_rgba(18,59,80,.18)]">
+              <a href="./lesson/" className="group relative block aspect-video overflow-hidden bg-[#123b50]" aria-label="打开地道法语积累005">
+                <img src="https://i.ytimg.com/vi/sRsyn7P3wKA/hqdefault.jpg" alt="Le jardin est si joli 视频画面" className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.035]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d2f40]/90 via-[#0d2f40]/10 to-black/5" />
+                <span className="absolute left-5 top-5 rounded-full border border-white/25 bg-[#0d2f40]/65 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.2em] text-white backdrop-blur">本周课程 · 005</span>
+                <span className="absolute right-5 top-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-[#123b50] shadow-sm">初级</span>
+                <span className="absolute inset-0 m-auto grid size-15 place-items-center rounded-full border border-white/55 bg-white/92 text-[#c74438] shadow-xl transition group-hover:scale-110"><Play className="ml-1 size-5 fill-current" /></span>
+                <div className="absolute inset-x-5 bottom-5 text-white"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-white/65">Ella Entwistle · French countryside</p><p className="mt-1 font-display text-2xl sm:text-3xl">Le jardin est si joli</p></div>
+              </a>
+              <div className="flex items-center justify-between gap-5 px-5 py-4">
+                <div className="min-w-0"><p className="truncate text-sm font-bold text-[#123b50]">从花园 Vlog 开始听懂真实法语</p><p className="mt-1 text-xs text-[#718078]">13 分钟 · 盲听、听写、精讲、口语输出</p></div>
+                <a href="./lesson/" className="grid size-10 shrink-0 place-items-center rounded-full bg-[#c74438] text-white transition hover:bg-[#ad382f]" aria-label="开始课程"><ArrowRight className="size-4" /></a>
               </div>
-              <div className="flex items-center justify-between gap-4 px-2 pb-1 pt-4"><div><p className="text-sm font-bold text-[#123b50]">当前只有这一门完整课程</p><p className="mt-1 text-xs text-[#718078]">含盲听、10 题听写、精讲与口语输出</p></div><Volume2 className="size-5 text-[#c74438]" /></div>
             </div>
-            <span className="absolute -right-3 -top-4 rotate-6 rounded-sm bg-[#f3c956] px-4 py-2 text-sm font-bold text-[#123b50] shadow-sm">Bon courage !</span>
+            <span className="absolute -bottom-4 -left-3 hidden -rotate-3 rounded-full border border-[#123b50]/10 bg-[#f3c956] px-4 py-2 text-xs font-bold text-[#123b50] shadow-sm sm:block">今天也听懂一句 ✦</span>
           </div>
         </div>
       </section>
@@ -86,15 +93,21 @@ export default function Home() {
       <section id="courses" className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end"><div><p className="mb-3 text-xs font-bold uppercase tracking-[.24em] text-[#c74438]">Vlog immersion</p><h2 className="font-display text-4xl tracking-tight text-[#123b50] sm:text-5xl">选择一个真实场景</h2><p className="mt-3 text-sm leading-6 text-[#67716b]">每一课都从“我想听懂”开始，以“我能说出来”结束。</p></div><div className="relative w-full lg:max-w-sm"><Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#7e8982]" /><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索场景、博主或主题" className="h-12 rounded-full border-[#123b50]/15 bg-white/75 pl-11 pr-4 shadow-sm focus-visible:border-[#c74438]/40 focus-visible:ring-[#c74438]/10" /></div></div>
         <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="按级别筛选课程">{filters.map((filter) => <Button key={filter} variant={activeFilter === filter ? 'default' : 'outline'} onClick={() => setActiveFilter(filter)} className={activeFilter === filter ? 'h-9 rounded-full bg-[#123b50] px-4 text-white' : 'h-9 rounded-full border-[#123b50]/15 bg-transparent px-4 text-[#56625b]'}>{filter}</Button>)}</div>
-        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredLessons.map((lesson) => (
-            <article key={lesson.id} className="group overflow-hidden rounded-[24px] border border-[#123b50]/10 bg-[#fffdf8] shadow-[0_12px_34px_rgba(18,59,80,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(18,59,80,.12)]">
-              <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${lesson.accent}`}><div className="paper-grain absolute inset-0 opacity-25" /><span className="absolute -bottom-5 right-6 select-none text-[7.5rem] leading-none drop-shadow-xl transition duration-500 group-hover:scale-110 group-hover:-rotate-3">{lesson.art}</span><span className="absolute left-5 top-5 font-display text-6xl italic text-white/25">{lesson.id}</span><div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4"><div className="rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[.16em] text-[#123b50] shadow-sm backdrop-blur">{lesson.creator}</div><div className="grid size-11 place-items-center rounded-full bg-[#fffdf8] text-[#c74438] shadow-lg"><Play className="ml-0.5 size-4 fill-current" /></div></div></div>
-              <div className="p-5"><div className="flex items-center gap-2 text-xs text-[#6f7b74]"><Badge variant="outline" className="border-[#c74438]/20 bg-[#c74438]/5 text-[#b23931]">{lesson.level}</Badge><span>{lesson.topic}</span><span>·</span><span>{lesson.minutes} 分钟</span></div><h3 className="mt-4 text-xl font-bold tracking-tight text-[#123b50]">{lesson.title}</h3><p className="mt-1 font-display text-lg italic text-[#68756e]">{lesson.french}</p><div className="mt-5 flex items-center justify-between border-t border-[#123b50]/10 pt-4">{localProgress ? <div className="flex min-w-0 flex-1 items-center gap-3"><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#123b50]/10"><div className="h-full rounded-full bg-[#c74438]" style={{ width: `${localProgress}%` }} /></div><span className="text-xs font-bold text-[#c74438]">{localProgress}%</span></div> : <span className="flex items-center gap-1.5 text-xs text-[#718078]"><Clock3 className="size-3.5" /> 约 {lesson.minutes} 分钟</span>}<a href="./lesson/" className="ml-4 inline-flex items-center gap-1 text-sm font-bold text-[#123b50] transition group-hover:text-[#c74438]">{localProgress ? '继续' : '开始'} <ArrowRight className="size-4" /></a></div></div>
+            <article key={lesson.id} className="group overflow-hidden rounded-[20px] border border-[#123b50]/10 bg-[#fffdf8] shadow-[0_10px_28px_rgba(18,59,80,.055)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(18,59,80,.11)]">
+              <a href="./lesson/" className="relative block aspect-video overflow-hidden bg-[#123b50]">
+                <img src={lesson.thumbnail} alt={`${lesson.title} 视频封面`} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d2f40]/65 via-transparent to-black/10" />
+                <span className="absolute left-3 top-3 rounded-full bg-[#0d2f40]/72 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.17em] text-white backdrop-blur">No. {lesson.id}</span>
+                <span className="absolute bottom-3 right-3 grid size-9 place-items-center rounded-full bg-white/92 text-[#c74438] shadow-lg"><Play className="ml-0.5 size-3.5 fill-current" /></span>
+                <span className="absolute bottom-3 left-3 text-[10px] font-bold uppercase tracking-[.14em] text-white/90">{lesson.creator}</span>
+              </a>
+              <div className="p-4"><div className="flex items-center gap-2 text-[11px] text-[#6f7b74]"><Badge variant="outline" className="h-5 border-[#c74438]/20 bg-[#c74438]/5 px-2 text-[10px] text-[#b23931]">{lesson.level}</Badge><span className="truncate">{lesson.topic}</span><span>·</span><span className="shrink-0">{lesson.minutes} 分钟</span></div><h3 className="mt-3 text-base font-bold tracking-tight text-[#123b50]">{lesson.title}</h3><p className="mt-0.5 truncate font-display text-base italic text-[#68756e]">{lesson.french}</p><div className="mt-4 flex items-center justify-between border-t border-[#123b50]/10 pt-3">{localProgress ? <div className="flex min-w-0 flex-1 items-center gap-2"><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#123b50]/10"><div className="h-full rounded-full bg-[#c74438]" style={{ width: `${localProgress}%` }} /></div><span className="text-[10px] font-bold text-[#c74438]">{localProgress}%</span></div> : <span className="flex items-center gap-1.5 text-[11px] text-[#718078]"><Clock3 className="size-3.5" /> 约 {lesson.minutes} 分钟</span>}<a href="./lesson/" className="ml-3 inline-flex items-center gap-1 text-xs font-bold text-[#123b50] transition group-hover:text-[#c74438]">{localProgress ? '继续' : '开始'} <ArrowRight className="size-3.5" /></a></div></div>
             </article>
           ))}
-          <aside className="grid min-h-[390px] place-items-center rounded-[24px] border border-dashed border-[#123b50]/20 bg-white/30 p-8 text-center">
-            <div><span className="mx-auto grid size-12 place-items-center rounded-full bg-[#123b50]/8 text-xl">＋</span><h3 className="mt-5 font-display text-2xl text-[#123b50]">下一课，由你决定</h3><p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-[#718078]">以后把想学的关键词或 YouTube URL 发给我，我会按同样的完整学习流程更新内容。</p></div>
+          <aside className="grid min-h-[300px] place-items-center rounded-[20px] border border-dashed border-[#123b50]/20 bg-white/30 p-6 text-center sm:min-h-0">
+            <div><span className="mx-auto grid size-10 place-items-center rounded-full bg-[#123b50]/8 text-lg">＋</span><h3 className="mt-4 font-display text-xl text-[#123b50]">下一课，由你决定</h3><p className="mx-auto mt-2 max-w-[240px] text-xs leading-5 text-[#718078]">把关键词或 YouTube URL 发给我，我会按同样的完整学习流程更新内容。</p></div>
           </aside>
         </div>
         {filteredLessons.length === 0 && <div className="mt-8 rounded-[24px] border border-dashed border-[#123b50]/20 bg-white/50 p-12 text-center"><p className="font-display text-2xl text-[#123b50]">没有找到对应课程</p><p className="mt-2 text-sm text-[#708078]">换一个关键词，或者查看全部级别。</p></div>}
