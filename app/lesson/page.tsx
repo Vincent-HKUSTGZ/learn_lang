@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   BookOpenCheck,
@@ -50,14 +50,16 @@ const blanks = [
   { before: 'Je vais', answer: 'quand même', after: 'vous le montrer.', hint: '还是／尽管如此' },
   { before: "L'arbre qui est", answer: 'au-dessus de moi', after: 'est un pommier.', hint: '在我的上方' },
   { before: 'Et', answer: 'là-bas', after: 'il y a un cerisier.', hint: '那边' },
-  { before: 'On aura', answer: 'plein de framboises', after: "dans l'été.", hint: '很多覆盆子' },
+  { before: "À l'autre côté, on a beaucoup de framboisiers, mais", answer: "c'est trop tôt dans l'année", after: 'pour avoir des framboises.', hint: '现在一年中还太早' },
+  { before: 'On aura', answer: 'plein de framboises', after: "dans l'été et elles sont délicieuses.", hint: '很多覆盆子' },
   { before: 'Elles sont', answer: "meilleures que celles qu'on achète au supermarché", after: '.', hint: '比超市买的更好吃' },
   { before: 'Et on a', answer: 'tellement de fleurs différentes', after: '.', hint: '这么多不同的花' },
-  { before: "C'est", answer: 'un de mes gâteaux préférés', after: '.', hint: '我最喜欢的蛋糕之一' },
-  { before: "C'est", answer: 'un genre de roman de science-fiction ou dystopique', after: '.', hint: '一种科幻或反乌托邦小说' },
+  { before: "J'ai une tasse de thé vert et un morceau de gâteau aux carottes qui est", answer: 'un de mes gâteaux préférés', after: '.', hint: '我最喜欢的蛋糕之一' },
+  { before: "J'ai aussi mon livre qui s'appelle Wool. C'est", answer: 'un genre de roman de science-fiction ou dystopique', after: '.', hint: '一种科幻或反乌托邦小说' },
   { before: 'Et je suis', answer: 'accro', after: '.', hint: '上瘾了／着迷了' },
-  { before: 'Le jardin est', answer: 'si joli', after: '.', hint: '如此漂亮' },
 ];
+
+const dictationText = blanks.map((blank) => `${blank.before} ${blank.answer} ${blank.after}`).join(' ');
 
 const vocab = [
   { word: 'délicieux · délicieuse', ipa: '[de.li.sjø · de.li.sjøz]', zh: '美味的；令人愉快的', example: 'Ce gâteau est délicieux.' },
@@ -73,12 +75,14 @@ function normalize(value: string) {
 export default function LessonPage() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [videoVisible, setVideoVisible] = useState(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [speakingKey, setSpeakingKey] = useState<string | null>(null);
+  const [speechMessage, setSpeechMessage] = useState('');
   const [answers, setAnswers] = useState<string[]>(() => blanks.map(() => ''));
   const [checked, setChecked] = useState(false);
   const [showChinese, setShowChinese] = useState(true);
   const [speakingDraft, setSpeakingDraft] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
+  const speechRunId = useRef(0);
 
   useEffect(() => {
     const stored = window.localStorage.getItem('fr-vlog-lesson-01');
@@ -90,6 +94,11 @@ export default function LessonPage() {
     } catch {
       // A malformed local preference should never block the lesson.
     }
+  }, []);
+
+  useEffect(() => () => {
+    speechRunId.current += 1;
+    window.speechSynthesis?.cancel();
   }, []);
 
   const progress = Math.round((completed.length / steps.length) * 100);
@@ -107,6 +116,44 @@ export default function LessonPage() {
     window.localStorage.setItem('fr-vlog-lesson-01', JSON.stringify({ completed: next, speakingDraft }));
     setSavedMessage('已保存到你的本地复习本 ✓');
     window.setTimeout(() => setSavedMessage(''), 2600);
+  }
+
+  function speakFrench(text: string, key: string, rate = 0.82, restart = false) {
+    if (!('speechSynthesis' in window)) {
+      setSpeechMessage('当前浏览器不支持机器朗读，请尝试 Chrome、Safari 或 Edge。');
+      return;
+    }
+
+    if (speakingKey === key && !restart) {
+      speechRunId.current += 1;
+      window.speechSynthesis.cancel();
+      setSpeakingKey(null);
+      setSpeechMessage('已停止朗读');
+      return;
+    }
+
+    const runId = speechRunId.current + 1;
+    speechRunId.current = runId;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const frenchVoice = window.speechSynthesis.getVoices().find((voice) => voice.lang.toLowerCase().startsWith('fr'));
+    utterance.lang = 'fr-FR';
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    if (frenchVoice) utterance.voice = frenchVoice;
+    utterance.onend = () => {
+      if (speechRunId.current !== runId) return;
+      setSpeakingKey(null);
+      setSpeechMessage('朗读完成');
+    };
+    utterance.onerror = () => {
+      if (speechRunId.current !== runId) return;
+      setSpeakingKey(null);
+      setSpeechMessage('朗读没有成功，请检查设备音量后重试。');
+    };
+    setSpeakingKey(key);
+    setSpeechMessage(key === 'dictation' ? '正在播放慢速法语听写' : '正在朗读这一句');
+    window.speechSynthesis.speak(utterance);
   }
 
   return (
@@ -147,14 +194,15 @@ export default function LessonPage() {
 
           <LessonSection id="dictation" number="03" eyebrow="Dictation" title="第二遍：听声音，把词补回来" description="输入不区分大小写。先听三遍，再看中文提示。" done={completed.includes('dictation')} onDone={() => markComplete('dictation')}>
             <div className="rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-7">
-              <div className="mb-6 flex items-center justify-between gap-3 rounded-2xl bg-[#123b50] px-4 py-3 text-white"><button type="button" onClick={() => setVideoPlaying(!videoPlaying)} className="grid size-10 place-items-center rounded-full bg-white text-[#c74438]" aria-label={videoPlaying ? '暂停音频' : '播放音频'}>{videoPlaying ? <Pause className="size-4 fill-current" /> : <Play className="ml-0.5 size-4 fill-current" />}</button><div className="min-w-0 flex-1"><p className="text-xs font-bold">听写片段 · 10 题</p><div className="mt-2 h-1 overflow-hidden rounded-full bg-white/20"><div className={`h-full bg-[#f3c956] transition-all duration-[5000ms] ${videoPlaying ? 'w-4/5' : 'w-[18%]'}`} /></div></div><Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/10"><RotateCcw className="size-4" /></Button></div>
+              <div className="mb-6 flex items-center justify-between gap-3 rounded-2xl bg-[#123b50] px-4 py-3 text-white"><button type="button" onClick={() => speakFrench(dictationText, 'dictation', 0.76)} className="grid size-10 place-items-center rounded-full bg-white text-[#c74438]" aria-label={speakingKey === 'dictation' ? '停止听写音频' : '播放慢速法语听写'}>{speakingKey === 'dictation' ? <Pause className="size-4 fill-current" /> : <Play className="ml-0.5 size-4 fill-current" />}</button><div className="min-w-0 flex-1"><p className="text-xs font-bold">慢速法语听写 · 10 题</p><p className="mt-1 truncate text-[11px] text-white/55">机器朗读已按原视频表达顺序重新排列</p><div className="mt-2 h-1 overflow-hidden rounded-full bg-white/20"><div className={`h-full bg-[#f3c956] transition-all duration-500 ${speakingKey === 'dictation' ? 'w-full animate-pulse' : 'w-[18%]'}`} /></div></div><Button variant="ghost" size="icon" onClick={() => speakFrench(dictationText, 'dictation', 0.76, true)} className="rounded-full text-white hover:bg-white/10" aria-label="从头重新播放听写"><RotateCcw className="size-4" /></Button></div>
+              {speechMessage && <p className="mb-5 rounded-xl bg-[#123b50]/6 px-4 py-2 text-xs font-medium text-[#52645b]" aria-live="polite">{speechMessage}</p>}
               <div className="space-y-5">{blanks.map((blank, index) => { const isCorrect = normalize(answers[index]) === normalize(blank.answer); return <div key={blank.answer} className="rounded-2xl border border-[#123b50]/10 bg-white/70 p-4"><div className="flex flex-wrap items-center gap-x-2 gap-y-3 text-base leading-8"><span>{index + 1}.</span><span>{blank.before}</span><Input value={answers[index]} onChange={(event) => { const next = [...answers]; next[index] = event.target.value; setAnswers(next); setChecked(false); }} aria-label={`第 ${index + 1} 空`} className={`h-10 w-full rounded-xl sm:w-56 ${checked ? isCorrect ? 'border-[#4c8a6c] bg-[#4c8a6c]/5' : 'border-[#c74438] bg-[#c74438]/5' : 'border-[#123b50]/15'}`} /><span>{blank.after}</span>{checked && <span className={`text-xs font-bold ${isCorrect ? 'text-[#4c8a6c]' : 'text-[#c74438]'}`}>{isCorrect ? '正确 ✓' : `答案：${blank.answer}`}</span>}</div><p className="mt-2 text-xs text-[#7a857f]">提示：{blank.hint}</p></div>; })}</div>
               <div className="mt-6 flex flex-wrap items-center gap-3"><Button onClick={() => setChecked(true)} className="h-10 rounded-full bg-[#c74438] px-5 text-white hover:bg-[#ad382f]">检查答案</Button><Button variant="ghost" onClick={() => { setAnswers(blanks.map((blank) => blank.answer)); setChecked(true); }} className="rounded-full text-[#123b50]">显示答案</Button>{checked && <span className="ml-auto text-sm font-bold text-[#123b50]">{score} / {blanks.length} 题正确</span>}</div>
             </div>
           </LessonSection>
 
-          <LessonSection id="transcript" number="04" eyebrow="Line by line" title="第三遍：逐句听懂，跟着节奏读" description="点击法语句子可以模拟单句播放；彩色语块是本课要带走的表达。" done={completed.includes('transcript')} onDone={() => markComplete('transcript')}>
-            <div className="overflow-hidden rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8]"><div className="flex items-center justify-between border-b border-[#123b50]/10 px-5 py-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-[#738078]">完整文本 · 7 句</p><Button variant="outline" size="sm" onClick={() => setShowChinese(!showChinese)} className="rounded-full border-[#123b50]/15 bg-white/70">{showChinese ? '隐藏中文' : '显示中文'}</Button></div><div>{transcript.map((line, index) => <button type="button" key={line.fr} onClick={() => setVideoPlaying(true)} className="group grid w-full gap-3 border-b border-[#123b50]/8 px-5 py-5 text-left last:border-0 hover:bg-[#f4eee2] sm:grid-cols-[38px_1fr]"><span className="grid size-8 place-items-center rounded-full bg-[#123b50]/7 text-xs font-bold text-[#123b50] group-hover:bg-[#c74438] group-hover:text-white">{String(index + 1).padStart(2, '0')}</span><span><span className="block text-base leading-8 text-[#233e49] sm:text-lg">{highlightFocus(line.fr, line.focus)}</span>{showChinese && <span className="mt-2 block text-sm leading-6 text-[#748079]">{line.zh}</span>}</span></button>)}</div></div>
+          <LessonSection id="transcript" number="04" eyebrow="Line by line" title="第三遍：逐句听懂，跟着节奏读" description="点击每句右侧的喇叭，听法语机器朗读；彩色语块是本课要带走的表达。" done={completed.includes('transcript')} onDone={() => markComplete('transcript')}>
+            <div className="overflow-hidden rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8]"><div className="flex items-center justify-between border-b border-[#123b50]/10 px-5 py-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-[#738078]">完整文本 · {transcript.length} 句</p><Button variant="outline" size="sm" onClick={() => setShowChinese(!showChinese)} className="rounded-full border-[#123b50]/15 bg-white/70">{showChinese ? '隐藏中文' : '显示中文'}</Button></div><div>{transcript.map((line, index) => { const lineKey = `line-${index}`; return <div key={line.fr} className="group grid w-full grid-cols-[38px_minmax(0,1fr)_40px] items-start gap-3 border-b border-[#123b50]/8 px-5 py-5 text-left last:border-0 hover:bg-[#f4eee2]"><span className="grid size-8 place-items-center rounded-full bg-[#123b50]/7 text-xs font-bold text-[#123b50] group-hover:bg-[#c74438] group-hover:text-white">{String(index + 1).padStart(2, '0')}</span><span><span className="block text-base leading-8 text-[#233e49] sm:text-lg">{highlightFocus(line.fr, line.focus)}</span>{showChinese && <span className="mt-2 block text-sm leading-6 text-[#748079]">{line.zh}</span>}</span><button type="button" onClick={() => speakFrench(line.fr, lineKey, 0.84)} className={`grid size-10 place-items-center rounded-full border transition ${speakingKey === lineKey ? 'border-[#c74438] bg-[#c74438] text-white' : 'border-[#123b50]/10 bg-white text-[#c74438] hover:border-[#c74438]/30 hover:bg-[#fff7f2]'}`} aria-label={speakingKey === lineKey ? `停止朗读第 ${index + 1} 句` : `朗读第 ${index + 1} 句`}>{speakingKey === lineKey ? <Pause className="size-4 fill-current" /> : <Volume2 className="size-4" />}</button></div>; })}</div></div>
           </LessonSection>
 
           <LessonSection id="notes" number="05" eyebrow="Language notes" title="把听到的内容，整理成可复用的表达" description="不堆砌规则，只解释这支 Vlog 里马上用得上的语法、短语与词汇。" done={completed.includes('notes')} onDone={() => markComplete('notes')}>
