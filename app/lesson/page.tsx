@@ -59,8 +59,6 @@ const blanks = [
   { before: 'Et je suis', answer: 'accro', after: '.', hint: '上瘾了／着迷了' },
 ];
 
-const dictationText = blanks.map((blank) => `${blank.before} ${blank.answer} ${blank.after}`).join(' ');
-
 const vocab = [
   { word: 'délicieux · délicieuse', ipa: '[de.li.sjø · de.li.sjøz]', zh: '美味的；令人愉快的', example: 'Ce gâteau est délicieux.' },
   { word: 'un pommier', ipa: '[œ̃ pɔ.mje]', zh: '苹果树', example: 'Il y a un pommier dans le jardin.' },
@@ -72,17 +70,29 @@ function normalize(value: string) {
   return value.toLocaleLowerCase('fr').replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
 }
 
+function formatAudioTime(seconds: number) {
+  if (!Number.isFinite(seconds)) return '0:00';
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+}
+
 export default function LessonPage() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [videoVisible, setVideoVisible] = useState(false);
   const [speakingKey, setSpeakingKey] = useState<string | null>(null);
   const [speechMessage, setSpeechMessage] = useState('');
+  const [dictationPlaying, setDictationPlaying] = useState(false);
+  const [dictationProgress, setDictationProgress] = useState(0);
+  const [dictationCurrentTime, setDictationCurrentTime] = useState(0);
+  const [dictationDuration, setDictationDuration] = useState(35.4);
+  const [dictationPlaybackRate, setDictationPlaybackRate] = useState(0.8);
   const [answers, setAnswers] = useState<string[]>(() => blanks.map(() => ''));
   const [checked, setChecked] = useState(false);
   const [showChinese, setShowChinese] = useState(true);
   const [speakingDraft, setSpeakingDraft] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
   const speechRunId = useRef(0);
+  const dictationAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const stored = window.localStorage.getItem('fr-vlog-lesson-01');
@@ -99,6 +109,7 @@ export default function LessonPage() {
   useEffect(() => () => {
     speechRunId.current += 1;
     window.speechSynthesis?.cancel();
+    dictationAudioRef.current?.pause();
   }, []);
 
   const progress = Math.round((completed.length / steps.length) * 100);
@@ -132,6 +143,8 @@ export default function LessonPage() {
       return;
     }
 
+    dictationAudioRef.current?.pause();
+    setDictationPlaying(false);
     const runId = speechRunId.current + 1;
     speechRunId.current = runId;
     window.speechSynthesis.cancel();
@@ -154,6 +167,38 @@ export default function LessonPage() {
     setSpeakingKey(key);
     setSpeechMessage(key === 'dictation' ? '正在播放慢速法语听写' : '正在朗读这一句');
     window.speechSynthesis.speak(utterance);
+  }
+
+  async function toggleDictationAudio(restart = false) {
+    const audio = dictationAudioRef.current;
+    if (!audio) return;
+
+    speechRunId.current += 1;
+    window.speechSynthesis?.cancel();
+    setSpeakingKey(null);
+
+    if (!restart && !audio.paused) {
+      audio.pause();
+      setDictationPlaying(false);
+      setSpeechMessage('听写音频已暂停');
+      return;
+    }
+
+    if (restart) audio.currentTime = 0;
+    audio.playbackRate = dictationPlaybackRate;
+    try {
+      await audio.play();
+      setDictationPlaying(true);
+      setSpeechMessage(`正在播放 ${dictationPlaybackRate === 0.8 ? '入门超慢速' : '慢速'}法语听写`);
+    } catch {
+      setDictationPlaying(false);
+      setSpeechMessage('音频没有成功播放，请检查设备音量后重试。');
+    }
+  }
+
+  function changeDictationRate(rate: number) {
+    setDictationPlaybackRate(rate);
+    if (dictationAudioRef.current) dictationAudioRef.current.playbackRate = rate;
   }
 
   return (
@@ -194,9 +239,41 @@ export default function LessonPage() {
 
           <LessonSection id="dictation" number="03" eyebrow="Dictation" title="第二遍：听声音，把词补回来" description="输入不区分大小写。先听三遍，再看中文提示。" done={completed.includes('dictation')} onDone={() => markComplete('dictation')}>
             <div className="rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-7">
-              <div className="mb-6 flex items-center justify-between gap-3 rounded-2xl bg-[#123b50] px-4 py-3 text-white"><button type="button" onClick={() => speakFrench(dictationText, 'dictation', 0.76)} className="grid size-10 place-items-center rounded-full bg-white text-[#c74438]" aria-label={speakingKey === 'dictation' ? '停止听写音频' : '播放慢速法语听写'}>{speakingKey === 'dictation' ? <Pause className="size-4 fill-current" /> : <Play className="ml-0.5 size-4 fill-current" />}</button><div className="min-w-0 flex-1"><p className="text-xs font-bold">慢速法语听写 · 10 题</p><p className="mt-1 truncate text-[11px] text-white/55">机器朗读已按原视频表达顺序重新排列</p><div className="mt-2 h-1 overflow-hidden rounded-full bg-white/20"><div className={`h-full bg-[#f3c956] transition-all duration-500 ${speakingKey === 'dictation' ? 'w-full animate-pulse' : 'w-[18%]'}`} /></div></div><Button variant="ghost" size="icon" onClick={() => speakFrench(dictationText, 'dictation', 0.76, true)} className="rounded-full text-white hover:bg-white/10" aria-label="从头重新播放听写"><RotateCcw className="size-4" /></Button></div>
+              <audio
+                ref={dictationAudioRef}
+                src="../dictation-005.wav"
+                preload="metadata"
+                onLoadedMetadata={(event) => setDictationDuration(event.currentTarget.duration)}
+                onTimeUpdate={(event) => {
+                  const audio = event.currentTarget;
+                  setDictationCurrentTime(audio.currentTime);
+                  setDictationProgress(audio.duration ? Math.min(100, (audio.currentTime / audio.duration) * 100) : 0);
+                }}
+                onPlay={() => setDictationPlaying(true)}
+                onPause={() => setDictationPlaying(false)}
+                onEnded={() => {
+                  setDictationPlaying(false);
+                  setDictationProgress(100);
+                  setSpeechMessage('整段听写播放完成，可以逐题再听一遍。');
+                }}
+              />
+              <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-[#123b50] px-4 py-3 text-white">
+                <button type="button" onClick={() => toggleDictationAudio()} className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[#c74438]" aria-label={dictationPlaying ? '暂停听写音频' : '播放听写音频'}>{dictationPlaying ? <Pause className="size-4 fill-current" /> : <Play className="ml-0.5 size-4 fill-current" />}</button>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3"><p className="text-xs font-bold">本地法语听写 · 10 题</p><span className="shrink-0 text-[10px] tabular-nums text-white/60">{formatAudioTime(dictationCurrentTime)} / {formatAudioTime(dictationDuration)}</span></div>
+                  <p className="mt-1 truncate text-[11px] text-white/55">内容已按原视频顺序核对 · 开头为 Le jardin est si joli</p>
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-[#f3c956] transition-[width] duration-150" style={{ width: `${dictationProgress}%` }} /></div>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => toggleDictationAudio(true)} className="shrink-0 rounded-full text-white hover:bg-white/10" aria-label="从头重新播放听写"><RotateCcw className="size-4" /></Button>
+              </div>
+              <div className="mb-5 flex flex-col justify-between gap-3 rounded-2xl border border-[#123b50]/10 bg-[#f3eee4] px-4 py-3 sm:flex-row sm:items-center">
+                <div><p className="text-xs font-bold text-[#123b50]">听不清时，先选“入门超慢速”，再用每题右侧喇叭反复听。</p><p className="mt-1 text-[11px] text-[#718078]">整段大意：她在花园里介绍果树、覆盆子、花、下午茶和正在读的书。</p></div>
+                <div className="flex shrink-0 gap-2" role="group" aria-label="听写播放速度">
+                  {[{ value: 0.8, label: '0.8× 入门' }, { value: 1, label: '1× 慢速' }].map((option) => <Button key={option.value} type="button" size="sm" variant="outline" onClick={() => changeDictationRate(option.value)} className={`rounded-full ${dictationPlaybackRate === option.value ? 'border-[#c74438] bg-[#c74438] text-white hover:bg-[#ad382f]' : 'border-[#123b50]/15 bg-white text-[#123b50]'}`}>{option.label}</Button>)}
+                </div>
+              </div>
               {speechMessage && <p className="mb-5 rounded-xl bg-[#123b50]/6 px-4 py-2 text-xs font-medium text-[#52645b]" aria-live="polite">{speechMessage}</p>}
-              <div className="space-y-5">{blanks.map((blank, index) => { const isCorrect = normalize(answers[index]) === normalize(blank.answer); return <div key={blank.answer} className="rounded-2xl border border-[#123b50]/10 bg-white/70 p-4"><div className="flex flex-wrap items-center gap-x-2 gap-y-3 text-base leading-8"><span>{index + 1}.</span><span>{blank.before}</span><Input value={answers[index]} onChange={(event) => { const next = [...answers]; next[index] = event.target.value; setAnswers(next); setChecked(false); }} aria-label={`第 ${index + 1} 空`} className={`h-10 w-full rounded-xl sm:w-56 ${checked ? isCorrect ? 'border-[#4c8a6c] bg-[#4c8a6c]/5' : 'border-[#c74438] bg-[#c74438]/5' : 'border-[#123b50]/15'}`} /><span>{blank.after}</span>{checked && <span className={`text-xs font-bold ${isCorrect ? 'text-[#4c8a6c]' : 'text-[#c74438]'}`}>{isCorrect ? '正确 ✓' : `答案：${blank.answer}`}</span>}</div><p className="mt-2 text-xs text-[#7a857f]">提示：{blank.hint}</p></div>; })}</div>
+              <div className="space-y-5">{blanks.map((blank, index) => { const isCorrect = normalize(answers[index]) === normalize(blank.answer); const sentence = `${blank.before} ${blank.answer} ${blank.after}`; const itemKey = `dictation-item-${index}`; return <div key={blank.answer} className="rounded-2xl border border-[#123b50]/10 bg-white/70 p-4"><div className="flex items-start gap-3"><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-x-2 gap-y-3 text-base leading-8"><span>{index + 1}.</span><span>{blank.before}</span><Input value={answers[index]} onChange={(event) => { const next = [...answers]; next[index] = event.target.value; setAnswers(next); setChecked(false); }} aria-label={`第 ${index + 1} 空`} className={`h-10 w-full rounded-xl sm:w-64 ${checked ? isCorrect ? 'border-[#4c8a6c] bg-[#4c8a6c]/5' : 'border-[#c74438] bg-[#c74438]/5' : 'border-[#123b50]/15'}`} /><span>{blank.after}</span>{checked && <span className={`text-xs font-bold ${isCorrect ? 'text-[#4c8a6c]' : 'text-[#c74438]'}`}>{isCorrect ? '正确 ✓' : `答案：${blank.answer}`}</span>}</div><p className="mt-2 text-xs text-[#7a857f]">提示：{blank.hint}</p></div><button type="button" onClick={() => speakFrench(sentence, itemKey, 0.7)} className={`grid size-9 shrink-0 place-items-center rounded-full border transition ${speakingKey === itemKey ? 'border-[#c74438] bg-[#c74438] text-white' : 'border-[#123b50]/10 bg-white text-[#c74438] hover:border-[#c74438]/30'}`} aria-label={speakingKey === itemKey ? `停止第 ${index + 1} 题朗读` : `慢速朗读第 ${index + 1} 题`}>{speakingKey === itemKey ? <Pause className="size-3.5 fill-current" /> : <Volume2 className="size-3.5" />}</button></div></div>; })}</div>
               <div className="mt-6 flex flex-wrap items-center gap-3"><Button onClick={() => setChecked(true)} className="h-10 rounded-full bg-[#c74438] px-5 text-white hover:bg-[#ad382f]">检查答案</Button><Button variant="ghost" onClick={() => { setAnswers(blanks.map((blank) => blank.answer)); setChecked(true); }} className="rounded-full text-[#123b50]">显示答案</Button>{checked && <span className="ml-auto text-sm font-bold text-[#123b50]">{score} / {blanks.length} 题正确</span>}</div>
             </div>
           </LessonSection>
