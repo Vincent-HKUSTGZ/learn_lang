@@ -62,4 +62,9 @@ for(const course of courses){
   for(const f of files){const data=fs.readFileSync(root+`public/english/${course.id}-${f}`);assert(data.length>1000);if(f.endsWith('.m4a'))assert.equal(data.toString('ascii',4,8),'ftyp');count++;}
 }
 assert.equal(count,54);
+for(const base of ['http://localhost:3000/lesson?id=hello','https://zhensun.cn/learn_lang/lesson/?id=hello']){
+  const next=new URL('../lesson/?id=routine',base);
+  assert(next.pathname.endsWith('/lesson/'));
+  assert.equal(next.searchParams.get('id'),'routine');
+}
 console.log('PASS: answer matching, independent-credit rules, retry, robust storage, 3 complete lessons, 24 exercises, 54 audio assets, and aligned timelines.');

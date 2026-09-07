@@ -609,8 +609,8 @@ export default function LessonPage() {
                   <p className="micro-note">
                     这是自评记忆卡，不改变听写得分。错题需要回到听写中独立答对才会移出错题本。
                   </p>
-                  <a className="text-link" href={`./?id=${reviewCard.id}`}>
-                    回到这门课重新听写 <ArrowRight size={16} />
+                  <a className="text-link" href={`../lesson/?id=${reviewCard.id}`}>
+                    回到这门课 <ArrowRight size={16} />
                   </a>
                 </div>
               ) : (
@@ -1192,7 +1192,7 @@ export default function LessonPage() {
                     href={
                       id === 'food'
                         ? '../'
-                        : `./?id=${id === 'hello' ? 'routine' : 'food'}`
+                        : `../lesson/?id=${id === 'hello' ? 'routine' : 'food'}`
                     }
                   >
                     {id === 'food' ? '回到课程书架' : '下一课'}{' '}
