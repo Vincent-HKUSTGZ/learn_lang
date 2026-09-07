@@ -1,335 +1,1264 @@
 'use client';
-
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
-  BookOpenCheck,
-  Check,
-  ChevronRight,
-  ExternalLink,
+  ArrowRight,
   Headphones,
+  Check,
+  BookOpen,
   Lightbulb,
-  Mic2,
-  NotebookPen,
-  Pause,
-  Play,
-  RotateCcw,
-  Sparkles,
+  Bookmark,
   Volume2,
+  VolumeX,
+  RotateCcw,
+  Eye,
+  Mic,
+  Download,
+  Upload,
+  ChevronRight,
+  Trophy,
 } from 'lucide-react';
-
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@/components/ui/accordion';
+import { AudioPlayer, stopAllAudio, time } from '@/components/english-audio';
+import { Recorder } from '@/components/english-recorder';
+import { catalog, type LessonId } from '@/lib/english/catalog';
+import courses from '@/lib/english/courses.json';
+import audioManifest from '@/lib/english/audio-manifest.json';
+import {
+  readState,
+  writeState,
+  emptyState,
+  emptyLesson,
+  today,
+  matches,
+  parseState,
+  gradeAnswer,
+  revealAnswer,
+  retryAnswer,
+  type LessonProgress,
+} from '@/lib/english/storage';
 
 const steps = [
-  ['context', '先说一遍'],
-  ['blind', '盲听抓词'],
-  ['dictation', '听写挑战'],
-  ['transcript', '逐句精听'],
-  ['notes', '表达笔记'],
-  ['speak', '开口带走'],
+  {
+    title: '先试着说',
+    english: 'Warm up',
+    description: '先写出你会的英语。学完再回来，会看到自己的进步。',
+  },
+  {
+    title: '听懂大意',
+    english: 'Listen first',
+    description: '从 BBC 原声开始。抓住一个关键词，就已经有收获。',
+  },
+  {
+    title: '听写挑战',
+    english: 'Catch the words',
+    description: '听配套场景对话，把缺少的表达补回来。按 Enter 检查当前题。',
+  },
+  {
+    title: '逐句跟读',
+    english: 'Make it sound natural',
+    description: '先听，再跟读。注意重音和停顿，不必模仿得一模一样。',
+  },
+  {
+    title: '表达工具箱',
+    english: 'Keep the useful bits',
+    description: '把语法、短语和词汇连回语境，收藏你真正想用的表达。',
+  },
+  {
+    title: '换成你的故事',
+    english: 'Make it yours',
+    description: '离开原句，用自己的生活再说一遍。会用，比只记住更进一步。',
+  },
 ];
-
-const transcript = [
-  { fr: 'Le jardin est si joli. Je vais quand même vous le montrer.', zh: '花园太漂亮了，我还是想给你们看看。', focus: 'quand même' },
-  { fr: "L'arbre qui est au-dessus de moi est un pommier et là-bas il y a un cerisier.", zh: '我头顶上这棵是苹果树，那边有一棵樱桃树。', focus: 'au-dessus de moi' },
-  { fr: "À l'autre côté, on a beaucoup de framboisiers, mais c'est trop tôt dans l'année pour avoir des framboises.", zh: '另一边种着许多覆盆子，不过现在还太早，还没有果子。', focus: "c'est trop tôt" },
-  { fr: "On aura plein de framboises dans l'été et elles sont délicieuses.", zh: '夏天我们会有很多覆盆子，而且特别美味。', focus: 'plein de' },
-  { fr: "Elles sont meilleures que celles qu'on achète dans le supermarché.", zh: '它们比超市买的好吃多了。', focus: 'meilleures que' },
-  { fr: 'Et on a tellement de fleurs différentes.', zh: '我们还种了好多不同的花。', focus: 'tellement de' },
-  { fr: "J'ai une tasse de thé vert et un morceau de gâteau aux carottes qui est l'un de mes gâteaux préférés.", zh: '我喝着一杯绿茶，吃着一块胡萝卜蛋糕，这是我最喜欢的蛋糕之一。', focus: "l'un de mes gâteaux préférés" },
-  { fr: "J'ai aussi mon livre qui s'appelle Wool.", zh: '我还带着一本叫《Wool》的书。', focus: "qui s'appelle" },
-  { fr: "C'est un genre de livre science-fiction ou dystopian et je suis accro.", zh: '这是一本科幻或反乌托邦类型的书，我已经看上瘾了。', focus: 'je suis accro' },
-];
-
-const blanks = [
-  { before: 'Je vais', answer: 'quand même', after: 'vous le montrer.', hint: '还是／尽管如此' },
-  { before: "L'arbre qui est", answer: 'au-dessus de moi', after: 'est un pommier.', hint: '在我的上方' },
-  { before: 'Et', answer: 'là-bas', after: 'il y a un cerisier.', hint: '那边' },
-  { before: "À l'autre côté, on a beaucoup de framboisiers, mais", answer: "c'est trop tôt dans l'année", after: 'pour avoir des framboises.', hint: '现在一年中还太早' },
-  { before: 'On aura', answer: 'plein de framboises', after: "dans l'été et elles sont délicieuses.", hint: '很多覆盆子' },
-  { before: 'Elles sont', answer: "meilleures que celles qu'on achète dans le supermarché", accepted: ["meilleures que celles qu'on achète au supermarché"], after: '.', hint: '比超市买的更好吃' },
-  { before: 'Et on a', answer: 'tellement de fleurs différentes', after: '.', hint: '这么多不同的花' },
-  { before: "J'ai une tasse de thé vert et un morceau de gâteau aux carottes qui est", answer: "l'un de mes gâteaux préférés", accepted: ['un de mes gâteaux préférés'], after: '.', hint: '我最喜欢的蛋糕之一' },
-  { before: "J'ai aussi mon livre qui s'appelle Wool. C'est", answer: 'un genre de livre science-fiction ou dystopian', accepted: ['un genre de roman de science-fiction ou dystopique'], after: '.', hint: '一种科幻或反乌托邦小说' },
-  { before: 'Et je suis', answer: 'accro', after: '.', hint: '上瘾了／着迷了' },
-];
-
-const vocab = [
-  { word: 'délicieux · délicieuse', ipa: '[de.li.sjø · de.li.sjøz]', zh: '美味的；令人愉快的', example: 'Ce gâteau est délicieux.' },
-  { word: 'un pommier', ipa: '[œ̃ pɔ.mje]', zh: '苹果树', example: 'Il y a un pommier dans le jardin.' },
-  { word: 'une framboise', ipa: '[yn fʁɑ̃.bwaz]', zh: '覆盆子', example: "J'adore les framboises fraîches." },
-  { word: 'accro', ipa: '[a.kʁo]', zh: '上瘾的；着迷的（口语）', example: 'Je suis accro à cette série.' },
-];
-
-function normalize(value: string) {
-  return value.toLocaleLowerCase('fr').replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
-}
-
-function answerMatches(blank: (typeof blanks)[number], value: string) {
-  const accepted = 'accepted' in blank ? (blank.accepted ?? []) : [];
-  return [blank.answer, ...accepted].some((answer) => normalize(value) === normalize(answer));
-}
-
-function formatAudioTime(seconds: number) {
-  if (!Number.isFinite(seconds)) return '0:00';
-  const minutes = Math.floor(seconds / 60);
-  return `${minutes}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
-}
+type Feedback = {
+  good: boolean;
+  title: string;
+  message: string;
+  celebration?: boolean;
+};
+type Question = {
+  question: string;
+  options: string[];
+  correct: number;
+  why: string;
+};
 
 export default function LessonPage() {
-  const [completed, setCompleted] = useState<string[]>([]);
-  const [activeClipKey, setActiveClipKey] = useState<string | null>(null);
-  const [speechMessage, setSpeechMessage] = useState('');
-  const [dictationPlaying, setDictationPlaying] = useState(false);
-  const [dictationProgress, setDictationProgress] = useState(0);
-  const [dictationCurrentTime, setDictationCurrentTime] = useState(0);
-  const [dictationDuration, setDictationDuration] = useState(55.05);
-  const [dictationPlaybackRate, setDictationPlaybackRate] = useState(0.8);
-  const [answers, setAnswers] = useState<string[]>(() => blanks.map(() => ''));
-  const [checked, setChecked] = useState(false);
+  const [id, setId] = useState<LessonId>('hello');
+  const [loaded, setLoaded] = useState(false);
+  const [state, setState] = useState(emptyState);
+  const stateRef = useRef(state);
+  const [review, setReview] = useState(false);
+  const [sourceMode, setSourceMode] = useState(false);
+  const [showSource, setShowSource] = useState(false);
   const [showChinese, setShowChinese] = useState(true);
-  const [speakingDraft, setSpeakingDraft] = useState('');
-  const [savedMessage, setSavedMessage] = useState('');
-  const dictationAudioRef = useRef<HTMLAudioElement | null>(null);
-  const clipAudioRef = useRef<HTMLAudioElement | null>(null);
-
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [activeLine, setActiveLine] = useState(-1);
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [onlyMistakes, setOnlyMistakes] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const importRef = useRef<HTMLInputElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const lesson = courses.find((l) => l.id === id)!;
+  const meta = catalog.find((l) => l.id === id)!;
+  const progress = state.lessons[id] ?? emptyLesson();
+  const step = Math.max(0, Math.min(5, progress.step));
+  const manifest = audioManifest[id];
+  const audio = (file: string) => `../english/${id}-${file}`;
+  const update = (
+    transform: (previous: LessonProgress) => LessonProgress,
+    lessonId: LessonId = id,
+    activity = true,
+  ) => {
+    const prev = stateRef.current;
+    const next = {
+      ...prev,
+      lastLesson: lessonId,
+      activity: activity
+        ? [...new Set([...prev.activity, today()])]
+        : prev.activity,
+      lessons: {
+        ...prev.lessons,
+        [lessonId]: transform(prev.lessons[lessonId] ?? emptyLesson()),
+      },
+    };
+    stateRef.current = next;
+    setState(next);
+    if (!writeState(next))
+      setSaveError('浏览器存储不可用，进度暂时无法保存。请先下载进度备份。');
+  };
   useEffect(() => {
-    const stored = window.localStorage.getItem('fr-vlog-lesson-01');
-    if (!stored) return;
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get('id');
+    const selected = catalog.find((c) => c.id === requested)?.id ?? 'hello';
+    const stored = readState();
+    stateRef.current = stored;
+    setState(stored);
+    setId(selected);
+    setReview(params.get('mode') === 'review');
+    setSourceMode((stored.lessons[selected]?.step ?? 0) === 1);
+    setLoaded(true);
+  }, []);
+  useEffect(
+    () => () => {
+      void audioContextRef.current?.close();
+    },
+    [],
+  );
+  useEffect(() => {
+    if (loaded) document.title = `${meta.title} · Little English`;
+  }, [loaded, meta.title]);
+  function notify(next: Feedback) {
+    setFeedback(next);
+    if (!stateRef.current.sound) return;
     try {
-      const parsed = JSON.parse(stored) as { completed?: string[]; speakingDraft?: string };
-      setCompleted(parsed.completed ?? []);
-      setSpeakingDraft(parsed.speakingDraft ?? '');
+      const ctx = audioContextRef.current ?? new AudioContext();
+      audioContextRef.current = ctx;
+      void ctx.resume();
+      const notes = next.good ? [523.25, 659.25, 783.99] : [392, 349.23];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator(),
+          gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.11);
+        gain.gain.linearRampToValueAtTime(
+          0.055,
+          ctx.currentTime + i * 0.11 + 0.01,
+        );
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          ctx.currentTime + i * 0.11 + 0.18,
+        );
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.11);
+        osc.stop(ctx.currentTime + i * 0.11 + 0.2);
+      });
     } catch {
-      // A malformed local preference should never block the lesson.
+      /* Feedback remains fully usable without sound. */
     }
-  }, []);
-
-  useEffect(() => () => {
-    dictationAudioRef.current?.pause();
-    clipAudioRef.current?.pause();
-  }, []);
-
-  const progress = Math.round((completed.length / steps.length) * 100);
-  const score = useMemo(() => answers.filter((answer, index) => answerMatches(blanks[index], answer)).length, [answers]);
-
-  function markComplete(id: string) {
-    const next = completed.includes(id) ? completed : [...completed, id];
-    setCompleted(next);
-    window.localStorage.setItem('fr-vlog-lesson-01', JSON.stringify({ completed: next, speakingDraft }));
   }
-
-  function saveSpeaking() {
-    const next = completed.includes('speak') ? completed : [...completed, 'speak'];
-    setCompleted(next);
-    window.localStorage.setItem('fr-vlog-lesson-01', JSON.stringify({ completed: next, speakingDraft }));
-    setSavedMessage('已保存到你的本地复习本 ✓');
-    window.setTimeout(() => setSavedMessage(''), 2600);
+  function changeStep(next: number) {
+    stopAllAudio();
+    setActiveLine(-1);
+    setReview(false);
+    setOnlyMistakes(false);
+    setSourceMode(next === 1);
+    update((p) => ({ ...p, step: next }), id, false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  async function toggleClip(src: string, key: string, label: string) {
-    const mainAudio = dictationAudioRef.current;
-    mainAudio?.pause();
-    setDictationPlaying(false);
-
-    let clipAudio = clipAudioRef.current;
-    if (!clipAudio) {
-      clipAudio = new Audio();
-      clipAudio.preload = 'auto';
-      clipAudioRef.current = clipAudio;
-    }
-
-    if (activeClipKey === key && !clipAudio.paused) {
-      clipAudio.pause();
-      setActiveClipKey(null);
-      setSpeechMessage('已停止播放');
+  function complete() {
+    if (
+      step === 2 &&
+      lesson.lines.some(
+        (_, i) =>
+          progress.results[`line-${i}`] === undefined &&
+          !progress.revealed.includes(`line-${i}`),
+      )
+    ) {
+      notify({
+        good: false,
+        title: '还有几句话等着你',
+        message: '每道题试一次或查看答案后，就能完成听写步骤。',
+      });
       return;
     }
-
-    clipAudio.pause();
-    clipAudio.src = src;
-    clipAudio.currentTime = 0;
-    clipAudio.playbackRate = 1;
-    clipAudio.onended = () => {
-      setActiveClipKey(null);
-      setSpeechMessage('播放完成');
-    };
-    clipAudio.onerror = () => {
-      setActiveClipKey(null);
-      setSpeechMessage('音频加载失败，请刷新页面后重试。');
-    };
-
-    try {
-      await clipAudio.play();
-      setActiveClipKey(key);
-      setSpeechMessage(`正在播放${label}`);
-    } catch {
-      setActiveClipKey(null);
-      setSpeechMessage('音频没有成功播放，请检查设备音量后重试。');
-    }
-  }
-
-  async function toggleDictationAudio(restart = false) {
-    const audio = dictationAudioRef.current;
-    if (!audio) return;
-
-    clipAudioRef.current?.pause();
-    setActiveClipKey(null);
-
-    if (!restart && !audio.paused) {
-      audio.pause();
-      setDictationPlaying(false);
-      setSpeechMessage('听写音频已暂停');
+    if (
+      step === 5 &&
+      ((progress.draft.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)?.length ?? 0) <
+        8 ||
+        progress.outputChecks.length < 3)
+    ) {
+      notify({
+        good: false,
+        title: '再加一点你自己的故事',
+        message:
+          '写至少 8 个英文单词，并对照下面三个目标自查。这里不会把自由表达误判为标准答案。',
+      });
       return;
     }
-
-    if (restart) audio.currentTime = 0;
-    audio.playbackRate = dictationPlaybackRate;
-    try {
-      await audio.play();
-      setDictationPlaying(true);
-      setSpeechMessage(`正在以 ${dictationPlaybackRate}× 播放博主原声`);
-    } catch {
-      setDictationPlaying(false);
-      setSpeechMessage('音频没有成功播放，请检查设备音量后重试。');
+    update((p) => ({
+      ...p,
+      completed: [...new Set([...p.completed, step])],
+      step: step < 5 ? step + 1 : 5,
+    }));
+    stopAllAudio();
+    setSourceMode(step + 1 === 1);
+    setActiveLine(-1);
+    if (step === 5) {
+      notify({
+        good: true,
+        celebration: true,
+        title: 'Look at you go! 🎉',
+        message:
+          '你的表达已保存。明天回来，用复习卡再说一遍，让这些句子留得更久。',
+      });
+    } else window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function checkAnswer(index: number) {
+    const key = `line-${index}`,
+      line = lesson.lines[index],
+      value = progress.answers[key] ?? '';
+    if (!value.trim()) {
+      notify({
+        good: false,
+        title: '先试一小步 🐣',
+        message: '先输入听到的词；不确定时可以点喇叭重听，再看中文提示。',
+      });
+      return;
     }
+    const good = matches(
+      value,
+      line.answer,
+      'alternatives' in line ? line.alternatives : [],
+    );
+    const helped = progress.revealed.includes(key);
+    update((p) => gradeAnswer(p, key, good));
+    notify({
+      good,
+      title: good
+        ? helped
+          ? '看懂了，再试着记住 🌱'
+          : ['Nice catch! 🦊', '你听出来啦！🌟', '这句话接住了！🐣'][index % 3]
+        : '差一点点，再听一次 🐻',
+      message: good
+        ? helped
+          ? '这次参考过答案，不计入独立答对。点“重新听写”后，遮住答案再挑战一次。'
+          : `「${line.answer}」＝${line.hint}。${line.tip}`
+        : `${line.tip} 提示：${line.hint}。可以修改后再提交，也可以查看答案。`,
+    });
   }
-
-  function changeDictationRate(rate: number) {
-    setDictationPlaybackRate(rate);
-    if (dictationAudioRef.current) dictationAudioRef.current.playbackRate = rate;
+  function reveal(index: number) {
+    update((p) => revealAnswer(p, `line-${index}`));
   }
-
-  return (
-    <main className="min-h-screen bg-[#f8f3e8] text-[#153545]">
-      <header className="sticky top-0 z-50 border-b border-[#123b50]/10 bg-[#f8f3e8]/92 backdrop-blur-xl">
-        <div className="mx-auto flex h-18 max-w-[1500px] items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
-          <a href="../" className="inline-flex items-center gap-2 text-sm font-bold text-[#123b50]"><ArrowLeft className="size-4" /> 返回课程库</a>
-          <div className="hidden min-w-0 flex-1 items-center justify-center gap-3 md:flex"><span className="truncate text-sm font-bold">005 · 地道法语积累005</span><Badge variant="outline" className="border-[#c74438]/20 bg-[#c74438]/5 text-[#b23931]">初级</Badge></div>
-          <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><p className="text-[11px] font-bold text-[#c74438]">{progress}% 完成</p><div className="mt-1 h-1.5 w-24 overflow-hidden rounded-full bg-[#123b50]/10"><div className="h-full bg-[#c74438] transition-all" style={{ width: `${progress}%` }} /></div></div><Button variant="outline" className="rounded-full border-[#123b50]/15 bg-white/50">我的笔记 <NotebookPen className="size-4" /></Button></div>
-        </div>
-      </header>
-
-      <section className="relative overflow-hidden border-b border-[#123b50]/10 bg-[#123b50] text-white">
-        <div className="paper-grid absolute inset-0 opacity-15" />
-        <div className="relative mx-auto grid max-w-[1500px] gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_auto] lg:px-12 lg:py-16">
-          <div><div className="flex flex-wrap gap-2"><Badge className="bg-[#f3c956] text-[#123b50]">初级 · A1–A2</Badge><Badge variant="outline" className="border-white/20 text-white">法国乡村生活</Badge><Badge variant="outline" className="border-white/20 text-white">13 分钟</Badge></div><p className="mt-6 text-xs font-bold uppercase tracking-[.2em] text-[#f3c956]">ella entwistle · Vlog immersion</p><h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">地道法语积累005</h1><p className="mt-2 font-display text-2xl italic text-white/70 sm:text-3xl">Le jardin est si joli</p><p className="mt-6 max-w-2xl text-sm leading-7 text-white/68 sm:text-base">跟着博主参观春天的法国乡村花园，听她介绍苹果树、樱桃树、覆盆子、花朵、下午茶与正在读的小说。</p></div>
-          <div className="self-end rounded-[22px] border border-white/10 bg-white/8 p-5 backdrop-blur sm:min-w-[285px]"><p className="text-xs font-bold uppercase tracking-[.16em] text-white/55">本课目标</p><ul className="mt-4 space-y-3 text-sm">{['听懂 9 句自然表达', '完成 10 题听写挑战', '掌握语法、短语与词汇', '完成 1 次开口输出'].map((item) => <li key={item} className="flex items-center gap-2"><Check className="size-4 text-[#f3c956]" /> {item}</li>)}</ul></div>
-        </div>
-      </section>
-
-      <div className="mx-auto grid max-w-[1500px] gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[235px_minmax(0,1fr)] lg:px-12">
-        <aside className="hidden lg:block"><nav className="sticky top-28 space-y-1 rounded-[20px] border border-[#123b50]/10 bg-white/45 p-3" aria-label="课程步骤">{steps.map(([id, label], index) => <a key={id} href={`#${id}`} className="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#66736c] transition hover:bg-white/70 hover:text-[#123b50]"><span className={`grid size-7 place-items-center rounded-full text-[11px] font-bold ${completed.includes(id) ? 'bg-[#4c8a6c] text-white' : 'bg-[#123b50]/8 text-[#123b50]'}`}>{completed.includes(id) ? <Check className="size-3.5" /> : index + 1}</span>{label}<ChevronRight className="ml-auto size-3.5 opacity-0 transition group-hover:opacity-100" /></a>)}</nav></aside>
-
-        <div className="min-w-0 space-y-8">
-          <LessonSection id="context" number="01" eyebrow="Warm up" title="先用你会的法语说一遍" description="不要追求完美。把中文情境变成最简单的法语，是建立表达回路的第一步。" done={completed.includes('context')} onDone={() => markComplete('context')}>
-            <div className="rounded-[20px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-7"><p className="text-sm font-bold text-[#c74438]">情境</p><p className="mt-3 text-lg leading-8 text-[#273f48]">“春天的花园很漂亮。你想带大家看看头顶的苹果树、远处的樱桃树，以及夏天会结满果实的覆盆子。”</p><Textarea className="mt-5 min-h-28 rounded-2xl border-[#123b50]/15 bg-white/70 p-4 text-base leading-7" placeholder="试着写下来：Le jardin est si joli. Je vais…" /><p className="mt-3 flex items-center gap-2 text-xs text-[#748078]"><Lightbulb className="size-3.5 text-[#d49b2a]" /> 不会完整表达也没关系，先把会的词拼起来。</p></div>
-          </LessonSection>
-
-          <LessonSection id="blind" number="02" eyebrow="Listen" title="第一遍：关掉字幕，只抓关键词" description="不用每个词都听懂。先判断人物、地点和发生了什么。" done={completed.includes('blind')} onDone={() => markComplete('blind')}>
-            <div className="overflow-hidden rounded-[22px] border border-[#123b50]/10 bg-[#0d2532] shadow-[0_20px_50px_rgba(18,59,80,.14)]">
-              <div className="relative aspect-video">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_30%,#6f947f,transparent_34%),radial-gradient(circle_at_32%_75%,#c49a7a55,transparent_30%),linear-gradient(135deg,#254e62,#0d2532)]"><div className="paper-grain absolute inset-0 opacity-25" /><button type="button" onClick={() => toggleDictationAudio()} className="absolute inset-0 m-auto grid size-20 place-items-center rounded-full border border-white/40 bg-white/90 text-[#c74438] shadow-2xl transition hover:scale-105" aria-label={dictationPlaying ? '暂停已截取的博主原声' : '播放已截取的博主原声'}>{dictationPlaying ? <Pause className="size-7 fill-current" /> : <Headphones className="size-8" />}</button><div className="absolute inset-x-6 bottom-6"><p className="text-xs font-bold uppercase tracking-[.2em] text-white/50">Listen without subtitles</p><p className="mt-2 text-xl font-bold text-white">原声已经截好，不会再弹出视频</p></div></div>
-              </div>
-              <div className="flex flex-col justify-between gap-3 border-t border-white/10 px-5 py-4 text-white sm:flex-row sm:items-center"><span className="flex items-center gap-2 text-sm text-white/70"><Headphones className="size-4 text-[#f3c956]" /> 课程片段：原视频 4:20–5:15</span><a href="https://youtu.be/sRsyn7P3wKA?t=260" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#f3c956]">查看来源 <ExternalLink className="size-3.5" /></a></div>
-            </div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">{['她在哪里？', '她提到了哪些食物？', '她的语气是什么？'].map((question) => <div key={question} className="rounded-2xl border border-[#123b50]/10 bg-white/55 p-4 text-sm font-bold text-[#506059]">{question}</div>)}</div>
-          </LessonSection>
-
-          <LessonSection id="dictation" number="03" eyebrow="Dictation" title="第二遍：听声音，把词补回来" description="输入不区分大小写。先听三遍，再看中文提示。" done={completed.includes('dictation')} onDone={() => markComplete('dictation')}>
-            <div className="rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-7">
-              <div className="mb-4 flex flex-col justify-between gap-2 rounded-2xl border border-[#123b50]/10 bg-[#f3eee4] px-4 py-3 sm:flex-row sm:items-center"><div><p className="text-xs font-bold text-[#123b50]">已嵌入博主原声片段</p><p className="mt-1 text-[11px] text-[#718078]">从原视频 4:20–5:15 精确截取；页面里直接播放，不再显示 YouTube。</p></div><Badge className="w-fit shrink-0 bg-[#f3c956] text-[#123b50]">原声 · 55 秒</Badge></div>
-              <audio
-                ref={dictationAudioRef}
-                src="../audio/lesson-005-original.m4a"
-                preload="metadata"
-                onLoadedMetadata={(event) => setDictationDuration(event.currentTarget.duration)}
-                onTimeUpdate={(event) => {
-                  const audio = event.currentTarget;
-                  setDictationCurrentTime(audio.currentTime);
-                  setDictationProgress(audio.duration ? Math.min(100, (audio.currentTime / audio.duration) * 100) : 0);
-                }}
-                onPlay={() => setDictationPlaying(true)}
-                onPause={() => setDictationPlaying(false)}
-                onEnded={() => {
-                  setDictationPlaying(false);
-                  setDictationProgress(100);
-                  setSpeechMessage('整段听写播放完成，可以逐题再听一遍。');
-                }}
-              />
-              <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-[#123b50] px-4 py-3 text-white">
-                <button type="button" onClick={() => toggleDictationAudio()} className="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[#c74438]" aria-label={dictationPlaying ? '暂停听写音频' : '播放听写音频'}>{dictationPlaying ? <Pause className="size-4 fill-current" /> : <Play className="ml-0.5 size-4 fill-current" />}</button>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3"><p className="text-xs font-bold">博主原声 · 完整听写段落</p><span className="shrink-0 text-[10px] tabular-nums text-white/60">{formatAudioTime(dictationCurrentTime)} / {formatAudioTime(dictationDuration)}</span></div>
-                  <p className="mt-1 truncate text-[11px] text-white/55">开头为 Le jardin est si joli · 可拖动进度反复听</p>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    value={dictationProgress}
-                    onChange={(event) => {
-                      const audio = dictationAudioRef.current;
-                      if (!audio || !audio.duration) return;
-                      const nextProgress = Number(event.target.value);
-                      audio.currentTime = (nextProgress / 100) * audio.duration;
-                      setDictationProgress(nextProgress);
-                      setDictationCurrentTime(audio.currentTime);
-                    }}
-                    className="mt-2 h-1.5 w-full cursor-pointer accent-[#f3c956]"
-                    aria-label="听写原声播放进度"
-                  />
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => toggleDictationAudio(true)} className="shrink-0 rounded-full text-white hover:bg-white/10" aria-label="从头重新播放听写"><RotateCcw className="size-4" /></Button>
-              </div>
-              <div className="mb-5 flex flex-col justify-between gap-3 rounded-2xl border border-[#123b50]/10 bg-[#f3eee4] px-4 py-3 sm:flex-row sm:items-center">
-                <div><p className="text-xs font-bold text-[#123b50]">听不清时先选 0.8×，再点每题右侧喇叭听对应原声切片。</p><p className="mt-1 text-[11px] text-[#718078]">整段大意：她在花园里介绍果树、覆盆子、花、下午茶和正在读的书。</p></div>
-                <div className="flex shrink-0 gap-2" role="group" aria-label="听写播放速度">
-                  {[{ value: 0.8, label: '0.8× 慢放' }, { value: 1, label: '1× 原速' }].map((option) => <Button key={option.value} type="button" size="sm" variant="outline" onClick={() => changeDictationRate(option.value)} className={`rounded-full ${dictationPlaybackRate === option.value ? 'border-[#c74438] bg-[#c74438] text-white hover:bg-[#ad382f]' : 'border-[#123b50]/15 bg-white text-[#123b50]'}`}>{option.label}</Button>)}
-                </div>
-              </div>
-              {speechMessage && <p className="mb-5 rounded-xl bg-[#123b50]/6 px-4 py-2 text-xs font-medium text-[#52645b]" aria-live="polite">{speechMessage}</p>}
-              <div className="space-y-5">{blanks.map((blank, index) => { const isCorrect = answerMatches(blank, answers[index]); const itemKey = `dictation-item-${index}`; const clipSrc = `../audio/lesson-005-dictation-${String(index + 1).padStart(2, '0')}.m4a`; return <div key={blank.answer} className="rounded-2xl border border-[#123b50]/10 bg-white/70 p-4"><div className="flex items-start gap-3"><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-x-2 gap-y-3 text-base leading-8"><span>{index + 1}.</span><span>{blank.before}</span><Input value={answers[index]} onChange={(event) => { const next = [...answers]; next[index] = event.target.value; setAnswers(next); setChecked(false); }} aria-label={`第 ${index + 1} 空`} className={`h-10 w-full rounded-xl sm:w-64 ${checked ? isCorrect ? 'border-[#4c8a6c] bg-[#4c8a6c]/5' : 'border-[#c74438] bg-[#c74438]/5' : 'border-[#123b50]/15'}`} /><span>{blank.after}</span>{checked && <span className={`text-xs font-bold ${isCorrect ? 'text-[#4c8a6c]' : 'text-[#c74438]'}`}>{isCorrect ? '正确 ✓' : `答案：${blank.answer}`}</span>}</div><p className="mt-2 text-xs text-[#7a857f]">提示：{blank.hint}</p></div><button type="button" onClick={() => toggleClip(clipSrc, itemKey, `第 ${index + 1} 题博主原声`)} className={`grid size-9 shrink-0 place-items-center rounded-full border transition ${activeClipKey === itemKey ? 'border-[#c74438] bg-[#c74438] text-white' : 'border-[#123b50]/10 bg-white text-[#c74438] hover:border-[#c74438]/30'}`} aria-label={activeClipKey === itemKey ? `停止第 ${index + 1} 题原声` : `播放第 ${index + 1} 题原声`}>{activeClipKey === itemKey ? <Pause className="size-3.5 fill-current" /> : <Volume2 className="size-3.5" />}</button></div></div>; })}</div>
-              <div className="mt-6 flex flex-wrap items-center gap-3"><Button onClick={() => setChecked(true)} className="h-10 rounded-full bg-[#c74438] px-5 text-white hover:bg-[#ad382f]">检查答案</Button><Button variant="ghost" onClick={() => { setAnswers(blanks.map((blank) => blank.answer)); setChecked(true); }} className="rounded-full text-[#123b50]">显示答案</Button>{checked && <span className="ml-auto text-sm font-bold text-[#123b50]">{score} / {blanks.length} 题正确</span>}</div>
-            </div>
-          </LessonSection>
-
-          <LessonSection id="transcript" number="04" eyebrow="Line by line" title="第三遍：逐句听懂，跟着节奏读" description="点击每句右侧的喇叭，直接听这句话的博主原声切片；彩色语块是本课要带走的表达。" done={completed.includes('transcript')} onDone={() => markComplete('transcript')}>
-            <div className="overflow-hidden rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8]"><div className="flex items-center justify-between border-b border-[#123b50]/10 px-5 py-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-[#738078]">完整文本 · {transcript.length} 句 · 博主原声</p><Button variant="outline" size="sm" onClick={() => setShowChinese(!showChinese)} className="rounded-full border-[#123b50]/15 bg-white/70">{showChinese ? '隐藏中文' : '显示中文'}</Button></div><div>{transcript.map((line, index) => { const lineKey = `line-${index}`; const clipSrc = `../audio/lesson-005-line-${String(index + 1).padStart(2, '0')}.m4a`; return <div key={line.fr} className="group grid w-full grid-cols-[38px_minmax(0,1fr)_40px] items-start gap-3 border-b border-[#123b50]/8 px-5 py-5 text-left last:border-0 hover:bg-[#f4eee2]"><span className="grid size-8 place-items-center rounded-full bg-[#123b50]/7 text-xs font-bold text-[#123b50] group-hover:bg-[#c74438] group-hover:text-white">{String(index + 1).padStart(2, '0')}</span><span><span className="block text-base leading-8 text-[#233e49] sm:text-lg">{highlightFocus(line.fr, line.focus)}</span>{showChinese && <span className="mt-2 block text-sm leading-6 text-[#748079]">{line.zh}</span>}</span><button type="button" onClick={() => toggleClip(clipSrc, lineKey, `第 ${index + 1} 句博主原声`)} className={`grid size-10 place-items-center rounded-full border transition ${activeClipKey === lineKey ? 'border-[#c74438] bg-[#c74438] text-white' : 'border-[#123b50]/10 bg-white text-[#c74438] hover:border-[#c74438]/30 hover:bg-[#fff7f2]'}`} aria-label={activeClipKey === lineKey ? `停止第 ${index + 1} 句原声` : `播放第 ${index + 1} 句原声`}>{activeClipKey === lineKey ? <Pause className="size-4 fill-current" /> : <Volume2 className="size-4" />}</button></div>; })}</div></div>
-            <div className="mt-4 rounded-2xl border border-[#d29b2d]/20 bg-[#fff8df] p-4 text-sm leading-6 text-[#5f6256]"><b className="text-[#8b6417]">原声说明：</b>文本忠实保留了博主的实际说法。更标准的书面法语可说 <i>au supermarché</i>，以及 <i>un genre de roman de science-fiction ou dystopique</i>；听写时两种写法都会判为正确。</div>
-          </LessonSection>
-
-          <LessonSection id="notes" number="05" eyebrow="Language notes" title="把听到的内容，整理成可复用的表达" description="不堆砌规则，只解释这支 Vlog 里马上用得上的语法、短语与词汇。" done={completed.includes('notes')} onDone={() => markComplete('notes')}>
-            <div className="grid gap-5 xl:grid-cols-2">
-              <div className="rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-6"><div className="mb-4 flex items-center gap-2"><BookOpenCheck className="size-5 text-[#c74438]" /><h3 className="text-lg font-black">语法 · Structures</h3></div><Accordion defaultValue={['quantity']}><AccordionItem value="quantity"><AccordionTrigger className="py-4 text-base font-bold">plein de / tellement de：数量很多</AccordionTrigger><AccordionContent className="pb-5 leading-7 text-[#5e6c65]"><p><code>plein de</code> 更口语、更随意；<code>tellement de</code> 带强调，接近“这么多／那么多”。两者后面直接接名词。</p><p className="rounded-xl bg-[#f3eee4] p-3 text-[#123b50]">J&apos;ai <b>tellement de</b> travail aujourd&apos;hui.</p></AccordionContent></AccordionItem><AccordionItem value="comparison"><AccordionTrigger className="py-4 text-base font-bold">meilleur que：不规则比较级</AccordionTrigger><AccordionContent className="pb-5 leading-7 text-[#5e6c65]"><p><code>meilleur</code> 是 <code>bon</code> 的比较级，要和名词性数配合：meilleur / meilleure / meilleurs / meilleures。</p><p className="rounded-xl bg-[#f3eee4] p-3 text-[#123b50]">Ces fraises sont <b>meilleures que</b> les autres.</p></AccordionContent></AccordionItem><AccordionItem value="oneof"><AccordionTrigger className="py-4 text-base font-bold">un de mes…：我的……之一</AccordionTrigger><AccordionContent className="pb-5 leading-7 text-[#5e6c65]"><p>结构是 <code>un / une de + 所有格 + 复数名词</code>。这是介绍喜好时非常实用的句型。</p><p className="rounded-xl bg-[#f3eee4] p-3 text-[#123b50]">C&apos;est <b>un de mes cafés préférés</b>.</p></AccordionContent></AccordionItem></Accordion></div>
-              <div className="rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-6"><div className="mb-4 flex items-center justify-between gap-3"><div className="flex items-center gap-2"><Sparkles className="size-5 text-[#d29b2d]" /><h3 className="text-lg font-black">短语 · Expressions</h3></div><Badge variant="outline" className="border-[#c74438]/15 bg-[#c74438]/5 text-[#b23931]">博主原声</Badge></div><div className="space-y-3">{[['quand même', '[kɑ̃ mɛm]', '还是；尽管如此', 'Il pleut, mais je sors quand même.'], ['au-dessus de', '[o də.sy də]', '在……上方', "L'avion vole au-dessus des nuages."], ['là-bas', '[la ba]', '在那边', 'Regarde, le café est là-bas.']].map(([phrase, ipa, zh, example], index) => { const phraseKey = `phrase-${index}`; const clipSrc = `../audio/lesson-005-phrase-${String(index + 1).padStart(2, '0')}.m4a`; return <div key={phrase} className="rounded-2xl bg-[#f3eee4] p-4"><div className="flex items-center justify-between gap-3"><span className="text-lg font-black text-[#123b50]">{phrase}</span><button type="button" onClick={() => toggleClip(clipSrc, phraseKey, `短语 ${phrase} 的博主原声`)} className={`grid size-8 place-items-center rounded-full transition ${activeClipKey === phraseKey ? 'bg-[#c74438] text-white' : 'bg-white text-[#c74438] hover:bg-[#fff8f2]'}`} aria-label={activeClipKey === phraseKey ? `停止播放 ${phrase}` : `播放 ${phrase} 博主原声`}>{activeClipKey === phraseKey ? <Pause className="size-3.5 fill-current" /> : <Volume2 className="size-3.5" />}</button></div><p className="mt-1 font-mono text-xs text-[#c74438]">{ipa}</p><p className="mt-3 text-sm font-bold">{zh}</p><p className="mt-2 text-sm italic leading-6 text-[#6c7871]">{example}</p></div>; })}</div></div>
-            </div>
-            <div className="mt-5 rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-6"><div className="flex items-center justify-between gap-3"><h3 className="text-lg font-black">词汇 · Vocabulaire</h3><Badge variant="outline" className="border-[#123b50]/15 bg-[#123b50]/5 text-[#123b50]">法国法语</Badge></div><div className="mt-5 grid gap-3 md:grid-cols-2">{vocab.map((item, index) => { const vocabKey = `vocab-${index}`; const clipSrc = `../audio/lesson-005-vocab-${String(index + 1).padStart(2, '0')}.m4a`; return <div key={item.word} className="rounded-2xl border border-[#123b50]/9 bg-white/60 p-4"><div className="flex items-start justify-between gap-4"><div><p className="font-black text-[#123b50]">{item.word}</p><p className="mt-1 font-mono text-xs text-[#c74438]">{item.ipa}</p></div><button type="button" onClick={() => toggleClip(clipSrc, vocabKey, `词汇 ${item.word} 的法国法语发音`)} className={`grid size-8 place-items-center rounded-full transition ${activeClipKey === vocabKey ? 'bg-[#123b50] text-white' : 'bg-[#123b50]/7 text-[#123b50] hover:bg-[#123b50]/12'}`} aria-label={activeClipKey === vocabKey ? `停止播放 ${item.word}` : `播放 ${item.word} 的法国法语发音`}>{activeClipKey === vocabKey ? <Pause className="size-3.5 fill-current" /> : <Volume2 className="size-3.5" />}</button></div><p className="mt-3 text-sm font-bold">{item.zh}</p><p className="mt-2 text-sm italic text-[#748078]">{item.example}</p></div>; })}</div></div>
-            <div className="mt-5 rounded-[22px] border border-[#123b50]/10 bg-[#fffdf8] p-5 sm:p-6"><div className="flex items-center gap-2"><BookOpenCheck className="size-5 text-[#4c8a6c]" /><h3 className="text-lg font-black">文本回顾 · Révision</h3></div><p className="mt-2 text-sm leading-6 text-[#718078]">先只读法语复述画面，再展开中文检查意思，摆脱逐字翻译。</p><Accordion className="mt-4">{transcript.map((line, index) => <AccordionItem key={line.fr} value={`review-${index}`}><AccordionTrigger className="py-4 text-base leading-7"><span className="mr-3 font-display italic text-[#c74438]/50">{String(index + 1).padStart(2, '0')}</span>{line.fr}</AccordionTrigger><AccordionContent className="pb-5 pl-9 text-sm leading-7 text-[#718078]">{line.zh}</AccordionContent></AccordionItem>)}</Accordion></div>
-          </LessonSection>
-
-          <LessonSection id="speak" number="06" eyebrow="Make it yours" title="最后：不用翻译，直接说你自己的话" description="从模板开始，把括号里的内容换成你的真实生活。" done={completed.includes('speak')} onDone={saveSpeaking} doneLabel="保存到复习本">
-            <div className="rounded-[22px] border border-[#c74438]/20 bg-[#fff8f2] p-5 sm:p-7"><div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-full bg-[#c74438] text-white"><Mic2 className="size-5" /></span><div><p className="text-sm font-black text-[#c74438]">口语任务</p><p className="text-xs text-[#7b716b]">描述你喜欢的一个地方或一种食物</p></div></div><div className="mt-6 space-y-3 rounded-2xl border border-[#c74438]/12 bg-white/65 p-5 text-base leading-8"><p><b>[地点]</b> est si / tellement <b>[形容词]</b>.</p><p>Je vais quand même <b>[动词]</b>.</p><p>C&apos;est un de mes / une de mes <b>[复数名词]</b> préférés.</p></div><Textarea value={speakingDraft} onChange={(event) => setSpeakingDraft(event.target.value)} className="mt-5 min-h-36 rounded-2xl border-[#c74438]/15 bg-white p-4 text-base leading-8 focus-visible:border-[#c74438]/40 focus-visible:ring-[#c74438]/10" placeholder="例如：Ce café est tellement joli. C'est un de mes endroits préférés à Shanghai…" /><div className="mt-4 flex flex-wrap items-center gap-3"><Button variant="outline" className="rounded-full border-[#c74438]/20 bg-white text-[#c74438]"><Mic2 className="size-4" /> 录下自己</Button><Button onClick={saveSpeaking} className="rounded-full bg-[#c74438] px-5 text-white hover:bg-[#ad382f]">保存这段表达</Button>{savedMessage && <span className="text-sm font-bold text-[#4c8a6c]">{savedMessage}</span>}</div></div>
-            <div className="mt-5 rounded-[22px] border border-[#123b50]/10 bg-[#123b50] p-6 text-white sm:p-8"><p className="text-xs font-bold uppercase tracking-[.18em] text-[#f3c956]">Culture minute · 法国文化一分钟</p><h3 className="mt-3 font-display text-3xl">法国乡村生活里的花园与邻里</h3><div className="mt-5 grid gap-5 text-sm leading-7 text-white/72 md:grid-cols-3"><p><b className="text-white">按季节生活。</b><br />果园和菜园让季节感非常具体：春天开花，夏天收覆盆子，秋天处理苹果。</p><p><b className="text-white">村庄的公共空间。</b><br />许多村庄围绕中心广场、咖啡馆、教堂和市政厅展开，日常生活节奏更慢。</p><p><b className="text-white">邻里互助。</b><br />邻居之间常会分享自家花园的收成、交换工具，或在外出时帮忙照看房子。</p></div></div>
-          </LessonSection>
-
-          <div className="rounded-[24px] bg-[#4c8a6c] p-7 text-white sm:p-9"><p className="text-xs font-bold uppercase tracking-[.2em] text-white/60">Bravo !</p><div className="mt-3 flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><div><h2 className="font-display text-3xl sm:text-4xl">你离“听懂”又近了一小步。</h2><p className="mt-3 text-sm text-white/75">明天回来复习 4 个表达，它们才会真正变成你的法语。</p></div><a href="../" className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-[#315f4a]">返回课程库 <ChevronRight className="size-4" /></a></div></div>
+  function retry(index: number) {
+    update((p) => retryAnswer(p, `line-${index}`));
+  }
+  function toggleWord(key: string) {
+    update((p) => ({
+      ...p,
+      savedWords: p.savedWords.includes(key)
+        ? p.savedWords.filter((w) => w !== key)
+        : [...p.savedWords, key],
+    }));
+  }
+  function toggleSound() {
+    const next = { ...stateRef.current, sound: !stateRef.current.sound };
+    stateRef.current = next;
+    setState(next);
+    writeState(next);
+  }
+  function exportProgress() {
+    const blob = new Blob([JSON.stringify(stateRef.current, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `little-english-${today()}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  async function importProgress(file?: File) {
+    if (!file) return;
+    try {
+      if (file.size > 2_000_000) throw new Error('too large');
+      const raw = JSON.parse(await file.text());
+      if (!raw?.lessons || !Array.isArray(raw.activity))
+        throw new Error('invalid backup');
+      const imported = parseState(raw),
+        current = stateRef.current;
+      if (!Object.keys(imported.lessons).length)
+        throw new Error('empty backup');
+      const next = {
+        ...current,
+        lessons: { ...imported.lessons, ...current.lessons },
+        activity: [...new Set([...current.activity, ...imported.activity])],
+      };
+      stateRef.current = next;
+      setState(next);
+      if (!writeState(next)) throw new Error('storage unavailable');
+      notify({
+        good: true,
+        title: '进度接回来啦 🌱',
+        message: '已恢复本机尚未开始的课程；已有课程进度未被覆盖。',
+      });
+    } catch {
+      notify({
+        good: false,
+        title: '这份备份暂时读不了',
+        message:
+          '请选择本站下载的英语进度 JSON 文件，并确认浏览器允许本地存储。原有进度不会被清空。',
+      });
+    }
+    if (importRef.current) importRef.current.value = '';
+  }
+  const quiz = (q: Question, key: string) => (
+    <div className="quiz-card">
+      <p className="eyebrow">LISTEN FOR MEANING</p>
+      <h3>{q.question}</h3>
+      <div className="quiz-options">
+        {q.options.map((option, i) => (
+          <button
+            key={option}
+            className={
+              progress.answers[key] === String(i)
+                ? `quiz-option ${i === q.correct ? 'right' : 'wrong'}`
+                : 'quiz-option'
+            }
+            onClick={() => {
+              update((p) => ({
+                ...p,
+                answers: { ...p.answers, [key]: String(i) },
+              }));
+              notify({
+                good: i === q.correct,
+                title: i === q.correct ? '听懂意思了！🌟' : '再抓一个关键词 🐻',
+                message: q.why,
+              });
+            }}
+          >
+            <span>{String.fromCharCode(65 + i)}</span>
+            {option}
+            {progress.answers[key] === String(i) && i === q.correct && (
+              <Check size={18} />
+            )}
+          </button>
+        ))}
+      </div>
+      {progress.answers[key] !== undefined && (
+        <p className="quiz-explanation">{q.why}</p>
+      )}
+    </div>
+  );
+  const reviewCards = courses
+    .flatMap((c) => {
+      const p = state.lessons[c.id] ?? emptyLesson();
+      return c.lines
+        .map((line, i) => ({
+          id: c.id as LessonId,
+          key: `line-${i}`,
+          en: line.en,
+          zh: line.zh,
+          src: `../english/${c.id}-line-${i}.mp3`,
+          due: p.reviews[`line-${i}`] ?? 0,
+          mistake: p.mistakes.includes(`line-${i}`),
+        }))
+        .filter((card) => card.mistake || p.mastered.includes(card.key));
+    })
+    .sort((a, b) => Number(b.mistake) - Number(a.mistake) || a.due - b.due);
+  const dueCards = reviewCards.filter((c) => c.due <= Date.now());
+  const deck = dueCards.length ? dueCards : reviewCards;
+  const reviewCard = deck.length ? deck[reviewIndex % deck.length] : null;
+  if (!loaded)
+    return (
+      <div className="english-app">
+        <div className="empty-state">
+          <Headphones />
+          <p>正在打开你的课程…</p>
         </div>
       </div>
-    </main>
+    );
+  return (
+    <div className="english-app lesson-app">
+      <header className="site-header lesson-header">
+        <a className="brand" href="../">
+          <span className="brand-icon">
+            <Headphones size={23} />
+          </span>
+          Little English<span className="brand-dot">.</span>
+        </a>
+        <a href="../" className="back-link">
+          <ArrowLeft size={16} />
+          课程书架
+        </a>
+        <div className="header-actions">
+          <button
+            onClick={toggleSound}
+            aria-label={state.sound ? '关闭反馈音效' : '开启反馈音效'}
+            title={state.sound ? '关闭反馈音效' : '开启反馈音效'}
+          >
+            {state.sound ? <Volume2 size={19} /> : <VolumeX size={19} />}
+          </button>
+          <button
+            onClick={() => {
+              stopAllAudio();
+              setReview(!review);
+              setFlipped(false);
+            }}
+            className={review ? 'selected' : ''}
+          >
+            <RotateCcw size={17} />
+            我的复习
+          </button>
+        </div>
+      </header>
+      <div className="lesson-layout">
+        <aside className="lesson-sidebar">
+          <a href="../" className="sidebar-back">
+            <ArrowLeft size={15} /> 全部课程
+          </a>
+          <p className="eyebrow">LESSON {meta.number}</p>
+          <h2>{meta.title}</h2>
+          <p className="sidebar-subtitle">{meta.subtitle}</p>
+          <div className="sidebar-progress">
+            <span>
+              学习进度 <b>{progress.completed.length}/6</b>
+            </span>
+            <div className="tiny-progress">
+              <span
+                style={{ width: `${(progress.completed.length / 6) * 100}%` }}
+              />
+            </div>
+          </div>
+          <nav aria-label="学习步骤">
+            {steps.map((s, i) => (
+              <button
+                key={s.title}
+                onClick={() => changeStep(i)}
+                className={
+                  step === i && !review ? 'step-link active' : 'step-link'
+                }
+              >
+                <span
+                  className={
+                    progress.completed.includes(i)
+                      ? 'step-number done'
+                      : 'step-number'
+                  }
+                >
+                  {progress.completed.includes(i) ? (
+                    <Check size={14} />
+                  ) : (
+                    String(i + 1).padStart(2, '0')
+                  )}
+                </span>
+                <span>{s.title}</span>
+                {step === i && !review && <ChevronRight size={15} />}
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-note">
+            <span>🌱</span>
+            <p>
+              不用一次全会。
+              <br />
+              每天听懂一点就很好。
+            </p>
+          </div>
+          <button className="backup-link" onClick={exportProgress}>
+            <Download size={15} />
+            下载进度备份
+          </button>
+          <button
+            className="backup-link restore-link"
+            onClick={() => importRef.current?.click()}
+          >
+            <Upload size={15} />
+            恢复进度备份
+          </button>
+          <input
+            ref={importRef}
+            hidden
+            type="file"
+            accept="application/json,.json"
+            aria-label="选择进度备份"
+            onChange={(e) => void importProgress(e.target.files?.[0])}
+          />
+          <p className="micro-note">
+            输入、错题、收藏自动保存在此浏览器。旧法语进度独立保留。
+          </p>
+        </aside>
+        <main className="lesson-main">
+          {saveError && (
+            <div className="notice error" role="alert">
+              {saveError}
+            </div>
+          )}
+          {review ? (
+            <>
+              <div className="lesson-heading">
+                <p className="eyebrow">A SECOND LITTLE LOOK</p>
+                <h1>把学过的，再变熟一点。</h1>
+                <p className="muted">
+                  {dueCards.length} 张待复习 · {reviewCards.length} 张卡片 ·
+                  覆盖三门课程
+                </p>
+              </div>
+              {reviewCard ? (
+                <div className="review-surface">
+                  <div className="review-card-top">
+                    <span className="pill blue">
+                      {catalog.find((c) => c.id === reviewCard.id)?.topic}
+                    </span>
+                    <span>{reviewCard.mistake ? '错题优先' : '句子复习'}</span>
+                  </div>
+                  <p className="micro-note">先看中文试着说英文，再翻面核对。</p>
+                  <button
+                    className={`flashcard ${flipped ? 'flipped' : ''}`}
+                    onClick={() => setFlipped(!flipped)}
+                    aria-label="翻转复习卡"
+                  >
+                    <span>{flipped ? 'ENGLISH' : '用英语怎么说？'}</span>
+                    <strong>{flipped ? reviewCard.en : reviewCard.zh}</strong>
+                    <small>
+                      <RotateCcw size={14} />
+                      {flipped ? '点击看中文' : '点击翻面'}
+                    </small>
+                  </button>
+                  <AudioPlayer
+                    src={reviewCard.src}
+                    label="复习句子 · 英式 AI"
+                  />
+                  <div className="review-rating">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        update(
+                          (p) => ({
+                            ...p,
+                            reviews: {
+                              ...p.reviews,
+                              [reviewCard.key]: Date.now() + 600000,
+                            },
+                          }),
+                          reviewCard.id,
+                        );
+                        setFlipped(false);
+                        setReviewIndex(0);
+                      }}
+                    >
+                      还不熟 · 10 分钟后
+                    </Button>
+                    <Button
+                      disabled={!flipped}
+                      onClick={() => {
+                        update(
+                          (p) => ({
+                            ...p,
+                            reviews: {
+                              ...p.reviews,
+                              [reviewCard.key]: Date.now() + 86400000,
+                            },
+                          }),
+                          reviewCard.id,
+                        );
+                        setFlipped(false);
+                        setReviewIndex(0);
+                      }}
+                    >
+                      记住了 · 明天复习 <Check size={16} />
+                    </Button>
+                  </div>
+                  <p className="micro-note">
+                    这是自评记忆卡，不改变听写得分。错题需要回到听写中独立答对才会移出错题本。
+                  </p>
+                  <a className="text-link" href={`./?id=${reviewCard.id}`}>
+                    回到这门课重新听写 <ArrowRight size={16} />
+                  </a>
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <span className="big-emoji">🌱</span>
+                  <h2>你的复习本还在等第一句话</h2>
+                  <p>完成听写后，答对的句子和错题会自动出现在这里。</p>
+                  <Button onClick={() => changeStep(2)}>
+                    去做听写 <ArrowRight size={16} />
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="lesson-heading">
+                <div className="heading-top">
+                  <p className="eyebrow">
+                    {String(step + 1).padStart(2, '0')} / 06 ·{' '}
+                    {steps[step].english.toUpperCase()}
+                  </p>
+                  <span className={`level ${meta.color}`}>
+                    {meta.level} · {meta.topic}
+                  </span>
+                </div>
+                <h1>{steps[step].title}</h1>
+                <p className="muted">{steps[step].description}</p>
+              </div>
+              {step > 0 && step < 4 && (
+                <div className="sticky-player">
+                  <div className="player-tabs">
+                    <button
+                      onClick={() => {
+                        stopAllAudio();
+                        setSourceMode(true);
+                      }}
+                      className={sourceMode ? 'active' : ''}
+                    >
+                      BBC 原声短片段
+                    </button>
+                    <button
+                      onClick={() => {
+                        stopAllAudio();
+                        setSourceMode(false);
+                      }}
+                      className={!sourceMode ? 'active' : ''}
+                    >
+                      配套对话 · 英式 AI
+                    </button>
+                    <span>
+                      {sourceMode
+                        ? `${time(lesson.sourceStart)}–${time(lesson.sourceEnd)} · 原视频`
+                        : '本站原创练习 · 8 句'}
+                    </span>
+                  </div>
+                  <AudioPlayer
+                    key={`${id}-${sourceMode}`}
+                    src={audio(sourceMode ? 'original.m4a' : 'practice.m4a')}
+                    label={sourceMode ? 'BBC 主持人原声' : '配套场景对话'}
+                    onTime={(t) => {
+                      if (!sourceMode)
+                        setActiveLine(
+                          manifest.timeline.findIndex(
+                            (s) => t >= s.start && t < s.end,
+                          ),
+                        );
+                    }}
+                    onEnded={() => setActiveLine(-1)}
+                  />
+                </div>
+              )}
+              {step === 0 && (
+                <>
+                  <div className={`warm-card ${meta.color}`}>
+                    <span className="big-emoji">{meta.emoji}</span>
+                    <p className="eyebrow">PICTURE YOURSELF HERE</p>
+                    <h2>如果是你，你会怎么说？</h2>
+                    <p>{lesson.warmup}</p>
+                    <label htmlFor="warmup">学习前的第一版</label>
+                    <Textarea
+                      id="warmup"
+                      value={progress.warmup}
+                      onChange={(e) =>
+                        update((p) => ({ ...p, warmup: e.target.value }))
+                      }
+                      placeholder="先写两三句，不会的词可以先用中文…"
+                    />
+                    <div className="hint-line">
+                      <Lightbulb size={17} />{' '}
+                      不要求全对，这段文字会留到最后，和你的新表达作对照。
+                    </div>
+                  </div>
+                  <div className="learning-plan">
+                    <h3>这一课，你会带走</h3>
+                    <div>
+                      <span>
+                        <Headphones />
+                        真实英语的语音节奏
+                      </span>
+                      <span>
+                        <BookOpen />8 个可直接使用的语块
+                      </span>
+                      <span>
+                        <Mic />
+                        一段属于自己的表达
+                      </span>
+                    </div>
+                  </div>
+                  <div className="source-credit">
+                    <img src={`../english/${id}.jpg`} alt={meta.sourceTitle} />
+                    <div>
+                      <p className="eyebrow">本课视频素材</p>
+                      <h3>{meta.sourceTitle}</h3>
+                      <p>BBC Learning English · YouTube</p>
+                      <a
+                        href={`https://www.youtube.com/watch?v=${meta.videoId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        查看官方视频 ↗
+                      </a>
+                    </div>
+                  </div>
+                </>
+              )}
+              {step === 1 && (
+                <>
+                  <div className="listen-intro">
+                    <span>🎧</span>
+                    <div>
+                      <h3>先听两遍，暂时不看文字</h3>
+                      <p>
+                        第一遍抓场景，第二遍抓关键词。听不清时用
+                        0.8×，或开启循环。
+                      </p>
+                    </div>
+                  </div>
+                  {quiz(lesson.sourceQuestion, 'source-quiz')}
+                  <div className="source-transcript">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowSource(!showSource)}
+                    >
+                      <Eye size={16} />
+                      {showSource ? '收起原声文字' : '听完了，看看原声文字'}
+                    </Button>
+                    {showSource && (
+                      <div>
+                        <p lang="en">{lesson.sourceText}</p>
+                        <p className="muted">{lesson.sourceZh}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="practice-intro">
+                    <p className="eyebrow">NOW, A LITTLE MORE</p>
+                    <h3>换一个场景，听听能不能懂</h3>
+                    <p>
+                      切换到“配套对话 · 英式
+                      AI”，听一遍后回答下面的问题。接下来的听写和逐句跟读都对应这段对话。
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        stopAllAudio();
+                        setSourceMode(false);
+                      }}
+                    >
+                      选择配套对话 <ArrowRight size={16} />
+                    </Button>
+                  </div>
+                  {quiz(lesson.quiz, 'practice-quiz')}
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  <div className="exercise-toolbar">
+                    <span>
+                      <b>{progress.mastered.length}</b> / 8 独立答对
+                    </span>
+                    <button
+                      onClick={() => setOnlyMistakes(!onlyMistakes)}
+                      className={onlyMistakes ? 'selected' : ''}
+                    >
+                      <RotateCcw size={15} />
+                      {onlyMistakes
+                        ? '显示全部题目'
+                        : `只看错题 (${progress.mistakes.length})`}
+                    </button>
+                  </div>
+                  <p className="micro-note exercise-note">
+                    忽略大小写与标点，兼容常见缩写。中文提示随时可用；查看答案后需重新听写，才计作独立答对。
+                  </p>
+                  <div className="dictation-list">
+                    {lesson.lines.map((line, i) => {
+                      const key = `line-${i}`,
+                        hasAnswer = progress.revealed.includes(key),
+                        result = progress.results[key],
+                        value = progress.answers[key] ?? '',
+                        offset = line.en.indexOf(line.answer);
+                      if (onlyMistakes && !progress.mistakes.includes(key))
+                        return null;
+                      return (
+                        <form
+                          key={key}
+                          className={`dictation-card ${result === true ? 'right' : result === false ? 'wrong' : ''}`}
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            checkAnswer(i);
+                          }}
+                        >
+                          <div className="question-header">
+                            <span className="question-number">
+                              {String(i + 1).padStart(2, '0')}
+                            </span>
+                            <span>
+                              {result === true
+                                ? hasAnswer
+                                  ? '参考答案后完成'
+                                  : '答对了 ✓'
+                                : result === false
+                                  ? '再听一次，你可以的'
+                                  : '听一句，补一个表达'}
+                            </span>
+                            <AudioPlayer
+                              src={audio(`line-${i}.mp3`)}
+                              label={`第 ${i + 1} 句练习`}
+                              compact
+                            />
+                          </div>
+                          <p className="gap-sentence" lang="en">
+                            {line.en.slice(0, offset)}
+                            <span className="gap-space">
+                              {hasAnswer ? line.answer : '······'}
+                            </span>
+                            {line.en.slice(offset + line.answer.length)}
+                          </p>
+                          <div className="answer-row">
+                            <Input
+                              value={value}
+                              aria-label={`第 ${i + 1} 题答案`}
+                              placeholder="输入听到的表达…"
+                              autoComplete="off"
+                              spellCheck={false}
+                              onChange={(e) =>
+                                update((p) => {
+                                  const results = { ...p.results };
+                                  delete results[key];
+                                  return {
+                                    ...p,
+                                    answers: {
+                                      ...p.answers,
+                                      [key]: e.target.value,
+                                    },
+                                    results,
+                                  };
+                                })
+                              }
+                            />
+                            <Button type="submit">
+                              检查 <Check size={15} />
+                            </Button>
+                          </div>
+                          <details className="question-hint">
+                            <summary>
+                              <Lightbulb size={14} />
+                              中文提示
+                            </summary>
+                            <p>
+                              {line.hint} · {line.zh}
+                            </p>
+                          </details>
+                          {(hasAnswer || result !== undefined) && (
+                            <div
+                              className={`answer-explanation ${result ? 'good' : ''}`}
+                            >
+                              <b>
+                                {hasAnswer || result
+                                  ? '答案：' + line.answer
+                                  : '可以从这个地方再听：'}
+                              </b>
+                              <p>{line.tip}</p>
+                            </div>
+                          )}
+                          <div className="question-actions">
+                            <button type="button" onClick={() => reveal(i)}>
+                              <Eye size={14} />
+                              查看答案
+                            </button>
+                            <button type="button" onClick={() => retry(i)}>
+                              <RotateCcw size={14} />
+                              重新听写
+                            </button>
+                            {progress.mastered.includes(key) && (
+                              <span>已独立答对过 🌟</span>
+                            )}
+                          </div>
+                        </form>
+                      );
+                    })}
+                    {onlyMistakes && !progress.mistakes.length && (
+                      <div className="empty-state">
+                        <span className="big-emoji">🥳</span>
+                        <h3>这一课没有待订正的错题</h3>
+                        <Button onClick={() => setOnlyMistakes(false)}>
+                          继续全部练习
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+              {step === 3 && (
+                <>
+                  <div className="exercise-toolbar">
+                    <span>听一遍 → 模仿一遍 → 自己说一遍</span>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowChinese(!showChinese)}
+                    >
+                      {showChinese ? '隐藏中文' : '显示中文'}
+                    </Button>
+                  </div>
+                  <div className="transcript-list">
+                    {lesson.lines.map((line, i) => (
+                      <div
+                        className={
+                          activeLine === i && !sourceMode
+                            ? 'transcript-row highlighted'
+                            : 'transcript-row'
+                        }
+                        key={line.en}
+                      >
+                        <span className="line-number">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <p className="english-line" lang="en">
+                            {highlight(line.en, line.focus)}
+                          </p>
+                          {showChinese && (
+                            <p className="translation">{line.zh}</p>
+                          )}
+                          <details className="pronunciation-tip">
+                            <summary>发音小提示</summary>
+                            <p>{line.tip}</p>
+                          </details>
+                        </div>
+                        <AudioPlayer
+                          compact
+                          src={audio(`line-${i}.mp3`)}
+                          label={`第 ${i + 1} 句跟读`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="surface">
+                    <h3>录下你最喜欢的两句</h3>
+                    <p className="muted">
+                      播放原句，跟着读，再录一遍自己的声音。
+                    </p>
+                    <Recorder label="我的跟读录音" />
+                  </div>
+                </>
+              )}
+              {step === 4 && (
+                <>
+                  <div className="surface">
+                    <div className="toolbox-title">
+                      <BookOpen />
+                      <h2>语法，够用就好</h2>
+                    </div>
+                    <Accordion defaultValue={['grammar-0']}>
+                      {lesson.grammar.map((g, i) => (
+                        <AccordionItem value={`grammar-${i}`} key={g.title}>
+                          <AccordionTrigger className="grammar-trigger">
+                            {g.title}
+                          </AccordionTrigger>
+                          <AccordionContent className="grammar-content">
+                            <p>{g.rule}</p>
+                            <blockquote lang="en">
+                              {g.example}
+                              <small>{g.zh}</small>
+                            </blockquote>
+                            <p className="hint-line">
+                              <Lightbulb size={17} />
+                              {g.error}
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                  {(['phrases', 'vocab'] as const).map((kind) => (
+                    <section className="word-section" key={kind}>
+                      <div className="section-title">
+                        <h2>
+                          {kind === 'phrases'
+                            ? '随手就能用的短语'
+                            : '放进语境的单词'}
+                        </h2>
+                        <span className="muted">
+                          英式 AI 发音 · 点击书签收藏
+                        </span>
+                      </div>
+                      <div className="word-grid">
+                        {lesson[kind].map((word, i) => {
+                          const key = `${kind}-${i}`;
+                          return (
+                            <div className="word-card" key={key}>
+                              <div className="word-header">
+                                <h3 lang="en">{word.text}</h3>
+                                <button
+                                  className={
+                                    progress.savedWords.includes(key)
+                                      ? 'saved'
+                                      : ''
+                                  }
+                                  aria-label={`${progress.savedWords.includes(key) ? '取消收藏' : '收藏'}${word.text}`}
+                                  onClick={() => toggleWord(key)}
+                                >
+                                  <Bookmark
+                                    size={18}
+                                    fill={
+                                      progress.savedWords.includes(key)
+                                        ? 'currentColor'
+                                        : 'none'
+                                    }
+                                  />
+                                </button>
+                                <AudioPlayer
+                                  compact
+                                  src={audio(`${kind}-${i}.mp3`)}
+                                  label={word.text}
+                                />
+                              </div>
+                              <p className="ipa">{word.ipa}</p>
+                              <p className="word-meaning">{word.zh}</p>
+                              <p className="word-note">{word.note}</p>
+                              <p className="word-example" lang="en">
+                                {word.example}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                  <div className="culture-panel">
+                    <p className="eyebrow">A LITTLE CULTURE</p>
+                    <h2>语言之外，懂一点语境</h2>
+                    <div>
+                      {lesson.culture.map((c) => (
+                        <article key={c.title}>
+                          <h3>{c.title}</h3>
+                          <p>{c.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                  {progress.savedWords.length > 0 && (
+                    <div className="notice">
+                      🔖 已收藏 {progress.savedWords.length}{' '}
+                      个表达。书签会保留在这门课，回来时可以直接复习。
+                    </div>
+                  )}
+                </>
+              )}
+              {step === 5 && (
+                <>
+                  <div className="output-card">
+                    <span className="big-emoji">✍️</span>
+                    <h2>现在，把主角换成你。</h2>
+                    <p>{lesson.outputPrompt}</p>
+                    <div className="template-list">
+                      {lesson.templates.map((t) => (
+                        <p lang="en" key={t}>
+                          {t}
+                        </p>
+                      ))}
+                    </div>
+                    <label htmlFor="output-draft">
+                      我的英语小段落 <span>自动保存</span>
+                    </label>
+                    <Textarea
+                      id="output-draft"
+                      value={progress.draft}
+                      onChange={(e) =>
+                        update((p) => ({ ...p, draft: e.target.value }))
+                      }
+                      placeholder="Write your own little story…"
+                    />
+                    <p className="micro-note">
+                      {progress.draft.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)
+                        ?.length ?? 0}{' '}
+                      个单词 · 自由表达没有唯一答案；此处保存与自查，不进行 AI
+                      语法评分。
+                    </p>
+                    <div className="output-checklist">
+                      {lesson.outputChecklist.map((item, i) => (
+                        <label key={item}>
+                          <input
+                            type="checkbox"
+                            checked={progress.outputChecks.includes(i)}
+                            onChange={(e) =>
+                              update((p) => ({
+                                ...p,
+                                outputChecks: e.target.checked
+                                  ? [...new Set([...p.outputChecks, i])]
+                                  : p.outputChecks.filter((x) => x !== i),
+                              }))
+                            }
+                          />
+                          {item}
+                        </label>
+                      ))}
+                    </div>
+                    <details className="sample-answer">
+                      <summary>需要灵感？看一段示例</summary>
+                      <p lang="en">{lesson.outputSample}</p>
+                    </details>
+                    <Recorder label="我的自由表达录音" />
+                  </div>
+                  {progress.warmup && (
+                    <div className="surface">
+                      <p className="eyebrow">BEFORE & AFTER</p>
+                      <h3>看看你学习前写的这一段</h3>
+                      <p className="warmup-review">{progress.warmup}</p>
+                      <p className="muted">
+                        现在能不能多补一个原因，或把一个句子说得更顺？
+                      </p>
+                    </div>
+                  )}
+                  <div className="surface">
+                    <h3>文本回顾：遮住英文再说一次</h3>
+                    <Accordion>
+                      {lesson.lines.map((line, i) => (
+                        <AccordionItem key={line.en} value={`recall-${i}`}>
+                          <AccordionTrigger className="grammar-trigger">
+                            {i + 1}. {line.zh}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <p className="english-line" lang="en">
+                              {line.en}
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                </>
+              )}
+              <div className="lesson-bottom">
+                <Button
+                  variant="outline"
+                  disabled={step === 0}
+                  onClick={() => changeStep(step - 1)}
+                >
+                  <ArrowLeft size={16} />
+                  上一步
+                </Button>
+                <span>
+                  {progress.completed.includes(step)
+                    ? '这一步已完成 ✓'
+                    : '按自己的节奏来'}
+                </span>
+                <Button onClick={complete}>
+                  {step === 5 ? '保存表达，完成这一步' : '完成这一步，继续'}
+                  {step === 5 ? <Trophy size={17} /> : <ArrowRight size={17} />}
+                </Button>
+              </div>
+              {progress.completed.length === 6 && (
+                <div className="completion-banner">
+                  <span>🎉</span>
+                  <div>
+                    <h3>这一课，完成啦！</h3>
+                    <p>让句子成为你的习惯，明天来复习。</p>
+                  </div>
+                  <a
+                    href={
+                      id === 'food'
+                        ? '../'
+                        : `./?id=${id === 'hello' ? 'routine' : 'food'}`
+                    }
+                  >
+                    {id === 'food' ? '回到课程书架' : '下一课'}{' '}
+                    <ArrowRight size={17} />
+                  </a>
+                </div>
+              )}
+              <footer className="lesson-source">
+                <a
+                  href={`https://www.youtube.com/watch?v=${meta.videoId}&t=${Math.floor(lesson.sourceStart)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  素材来源：BBC Learning English ↗
+                </a>
+                <p>
+                  BBC
+                  原声为短片段；听写、逐句跟读、短语与词汇是本站编写的配套练习，使用英式
+                  AI 音频。本项目与 BBC 无隶属关系。
+                </p>
+              </footer>
+            </>
+          )}
+        </main>
+      </div>
+      <Dialog
+        open={!!feedback}
+        onOpenChange={(open) => {
+          if (!open) setFeedback(null);
+        }}
+      >
+        <DialogContent
+          className={`learning-feedback ${feedback?.good ? 'good' : 'gentle'}`}
+        >
+          <span className="feedback-emoji" aria-hidden="true">
+            {feedback?.celebration ? '🎉' : feedback?.good ? '🦊' : '🐻'}
+          </span>
+          {feedback?.good && (
+            <div className="sparkle-row" aria-hidden="true">
+              ✦ · ✨ · ✦
+            </div>
+          )}
+          <DialogTitle className="feedback-title">
+            {feedback?.title}
+          </DialogTitle>
+          <DialogDescription className="feedback-message">
+            {feedback?.message}
+          </DialogDescription>
+          <Button onClick={() => setFeedback(null)} className="feedback-button">
+            {feedback?.good ? '继续，我可以！' : '好，再试试'}{' '}
+            <ArrowRight size={17} />
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
-
-function LessonSection({ id, number, eyebrow, title, description, done, onDone, doneLabel = '标记完成', children }: { id: string; number: string; eyebrow: string; title: string; description: string; done: boolean; onDone: () => void; doneLabel?: string; children: React.ReactNode }) {
-  return <section id={id} className="scroll-mt-28"><div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div className="flex gap-4"><span className="font-display text-4xl italic text-[#c74438]/30">{number}</span><div><p className="text-[11px] font-bold uppercase tracking-[.2em] text-[#c74438]">{eyebrow}</p><h2 className="mt-1 text-2xl font-black tracking-tight text-[#123b50] sm:text-3xl">{title}</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[#718078]">{description}</p></div></div><Button onClick={onDone} variant={done ? 'secondary' : 'outline'} className={`shrink-0 rounded-full ${done ? 'bg-[#4c8a6c]/12 text-[#397454]' : 'border-[#123b50]/15 bg-white/40 text-[#123b50]'}`}>{done ? <><Check className="size-4" /> 已完成</> : doneLabel}</Button></div>{children}</section>;
-}
-
-function highlightFocus(text: string, focus: string) {
-  const start = text.indexOf(focus);
-  if (start < 0) return text;
-  return <>{text.slice(0, start)}<mark className="rounded bg-[#f3c956]/30 px-1 font-bold text-[#bd3d34] underline decoration-[#c74438]/30 underline-offset-4">{focus}</mark>{text.slice(start + focus.length)}</>;
+function highlight(text: string, focus: string) {
+  const index = text.indexOf(focus);
+  return index < 0 ? (
+    text
+  ) : (
+    <>
+      {text.slice(0, index)}
+      <mark>{focus}</mark>
+      {text.slice(index + focus.length)}
+    </>
+  );
 }

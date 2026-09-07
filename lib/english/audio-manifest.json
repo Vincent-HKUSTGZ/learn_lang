@@ -1,0 +1,122 @@
+{
+  "hello": {
+    "sourceDuration": 7.91,
+    "practiceDuration": 39.75,
+    "timeline": [
+      {
+        "start": 0,
+        "end": 5.23
+      },
+      {
+        "start": 5.23,
+        "end": 12.74
+      },
+      {
+        "start": 12.74,
+        "end": 17.13
+      },
+      {
+        "start": 17.13,
+        "end": 21.5
+      },
+      {
+        "start": 21.5,
+        "end": 25.17
+      },
+      {
+        "start": 25.17,
+        "end": 29.46
+      },
+      {
+        "start": 29.46,
+        "end": 33.92
+      },
+      {
+        "start": 33.92,
+        "end": 39.75
+      }
+    ],
+    "voice": "en-GB-SoniaNeural / en-GB-RyanNeural",
+    "practiceKind": "authored AI-voiced dialogue"
+  },
+  "routine": {
+    "sourceDuration": 16.44,
+    "practiceDuration": 35.05,
+    "timeline": [
+      {
+        "start": 0,
+        "end": 4.68
+      },
+      {
+        "start": 4.68,
+        "end": 8.97
+      },
+      {
+        "start": 8.97,
+        "end": 13.14
+      },
+      {
+        "start": 13.14,
+        "end": 16.88
+      },
+      {
+        "start": 16.88,
+        "end": 20.79
+      },
+      {
+        "start": 20.79,
+        "end": 25.37
+      },
+      {
+        "start": 25.37,
+        "end": 29.09
+      },
+      {
+        "start": 29.09,
+        "end": 35.04
+      }
+    ],
+    "voice": "en-GB-SoniaNeural / en-GB-RyanNeural",
+    "practiceKind": "authored AI-voiced dialogue"
+  },
+  "food": {
+    "sourceDuration": 12.4,
+    "practiceDuration": 37.5,
+    "timeline": [
+      {
+        "start": 0,
+        "end": 4.44
+      },
+      {
+        "start": 4.44,
+        "end": 8.61
+      },
+      {
+        "start": 8.61,
+        "end": 11.94
+      },
+      {
+        "start": 11.94,
+        "end": 18.32
+      },
+      {
+        "start": 18.32,
+        "end": 23.65
+      },
+      {
+        "start": 23.65,
+        "end": 27.2
+      },
+      {
+        "start": 27.2,
+        "end": 31.04
+      },
+      {
+        "start": 31.04,
+        "end": 37.49
+      }
+    ],
+    "voice": "en-GB-SoniaNeural / en-GB-RyanNeural",
+    "practiceKind": "authored AI-voiced dialogue"
+  }
+}

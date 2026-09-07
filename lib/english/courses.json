@@ -1,0 +1,122 @@
+[
+  {
+    "id":"hello", "sourceStart":14.038, "sourceEnd":21.944,
+    "sourceText":"Hello, I'm Sian. What's your name? My name's Tim. It's nice to meet you. Lovely to meet you too.",
+    "sourceZh":"Sian 和 Tim 互相介绍姓名，并礼貌地回应初次见面的问候。",
+    "sourceQuestion":{"question":"这段对话发生在什么情境？","options":["两个人第一次见面","朋友在讨论早餐","同事在约定开会时间"],"correct":0,"why":"你会听到 name 和 meet you：先问名字，再表达见到对方很高兴。"},
+    "warmup":"你在英语读书会认识了一位新朋友。试着告诉对方你的名字、来自哪里，并问问对方。只写你现在会的英语即可。",
+    "lines":[
+      {"en":"Hi there! I'm Alex. Is this your first visit?","zh":"嗨！我是 Alex。你是第一次来吗？","focus":"first visit","tip":"I'm 是 I am 的缩写；重读名字 Alex 和问题里的 first visit。","answer":"first visit","hint":"第一次来访"},
+      {"en":"Yes, it is. My name is Maya. It's great to be here.","zh":"是的。我叫 Maya。很高兴来到这里。","focus":"My name is","tip":"name is 连起来读，像一个语块。不要在两个词中间停太久。","answer":"My name is","hint":"我的名字是"},
+      {"en":"Welcome, Maya. Where do you come from?","zh":"欢迎你，Maya。你来自哪里？","focus":"Where do you come from","tip":"do you 在自然语流里会弱读，主要听 Where 和 come from。","answer":"Where do you come from","hint":"你来自哪里"},
+      {"en":"I come from China, but I live in London now.","zh":"我来自中国，但现在住在伦敦。","focus":"live in","tip":"live 在这里是动词 /lɪv/，不是形容词 live 的 /laɪv/。","answer":"live in","hint":"住在"},
+      {"en":"What do you enjoy doing in your free time?","zh":"你空闲时喜欢做什么？","focus":"in your free time","tip":"把 in your 连起来，重读 free time。enjoy 后面接动词时用 -ing。","answer":"in your free time","hint":"在你的空闲时间"},
+      {"en":"I enjoy reading, and I'm learning to cook.","zh":"我喜欢读书，也正在学做饭。","focus":"learning to cook","tip":"learning to 中的 to 通常读得短而轻；cook 的元音是 /ʊ/。","answer":"learning to cook","hint":"正在学习做饭"},
+      {"en":"That sounds fun. Would you like to sit with us?","zh":"听起来很有趣。你想和我们坐一起吗？","focus":"Would you like to","tip":"这是友善的邀请。would you 常连读；句尾自然上扬即可。","answer":"Would you like to","hint":"你想不想……（礼貌邀请）"},
+      {"en":"Yes, please. Thanks for making me feel welcome.","zh":"好的，谢谢。谢谢你让我觉得很受欢迎。","focus":"Thanks for","tip":"Thanks 的 th 要轻轻把舌尖放在齿间；for 后的动词用 -ing。","answer":"Thanks for","hint":"谢谢你……"}
+    ],
+    "quiz":{"question":"Maya 现在住在哪里？","options":["中国","伦敦","没有提到"],"correct":1,"why":"她来自中国，但说自己现在住在 London。区分 come from（来自）与 live in（居住）。"},
+    "grammar":[
+      {"title":"介绍自己：be 与普通动词","rule":"I am + 名字／身份；I live in + 地点。不要把 am 和 live 直接放在一起。","example":"I am a student. I live in Bristol.","zh":"我是学生。我住在布里斯托尔。","error":"不是 I am live in London，而是 I live in London。"},
+      {"title":"提问：Where do you…?","rule":"询问来自哪里、住在哪里时，用 Where + do + you + 动词原形。","example":"Where do you work? I work in a library.","zh":"你在哪里工作？我在图书馆工作。","error":"do 是帮助构成问题的词，不需要翻译成“做”。"},
+      {"title":"enjoy 后面用 -ing","rule":"enjoy + 名词或动词 -ing。用一个具体爱好，让自我介绍继续下去。","example":"I enjoy drawing and taking photos.","zh":"我喜欢画画和拍照。","error":"说 enjoy reading，不说 enjoy to read。"}
+    ],
+    "phrases":[
+      {"text":"That sounds fun.","ipa":"/ðæt saʊndz fʌn/","zh":"听起来很有趣。","note":"接住对方的话，再问一个小问题。","example":"That sounds fun. Who do you go with?"},
+      {"text":"Would you like to…?","spoken":"Would you like to join us?","ipa":"/wʊd ju laɪk tə/","zh":"你想……吗？","note":"礼貌邀请，比直接命令更柔和。","example":"Would you like to join us?"},
+      {"text":"in my free time","ipa":"/ɪn maɪ friː taɪm/","zh":"在我的空闲时间","note":"放在句首或句尾，介绍业余爱好。","example":"I paint in my free time."},
+      {"text":"Thanks for…","spoken":"Thanks for your help.","ipa":"/θæŋks fə/","zh":"谢谢你的……","note":"后面接名词或 -ing 形式。","example":"Thanks for your help."}
+    ],
+    "vocab":[
+      {"text":"visit","ipa":"/ˈvɪzɪt/","zh":"n. / v. 来访；参观","note":"a first visit：第一次来访。","example":"We visit our friends on Sundays."},
+      {"text":"welcome","ipa":"/ˈwelkəm/","zh":"adj. 受欢迎的；v. 欢迎","note":"第二个音节弱读 /kəm/。","example":"You are always welcome here."},
+      {"text":"enjoy","ipa":"/ɪnˈdʒɔɪ/","zh":"v. 享受；喜欢","note":"重音在第二个音节；后接 -ing。","example":"I enjoy learning new things."},
+      {"text":"learn","ipa":"/lɜːn/","zh":"v. 学习","note":"英式发音中的 r 通常不单独发音。","example":"I learn something every day."}
+    ],
+    "templates":["I'm [名字], and I live in [地点].","In my free time, I enjoy [动词-ing].","Would you like to [动词原形]?"],
+    "outputPrompt":"为读书会写一段 3 句自我介绍：名字和住处、一个爱好、一个问对方的问题。",
+    "outputSample":"I'm Leo, and I live in Shenzhen. In my free time, I enjoy cycling. What do you enjoy doing?",
+    "outputChecklist":["说出名字和住处","使用 enjoy + -ing 介绍一个爱好","问对方一个问题"],
+    "culture":[{"title":"先用名字打开对话","body":"非正式交流里常直接用名字称呼对方。没听清时可以礼貌地问：Could you say that again? 不必假装听懂。"},{"title":"一个小问题就够了","body":"初次交谈可以从兴趣、正在参加的活动聊起。回应对方，再问一个相关问题，比背诵很长的自我介绍更自然。"}]
+  },
+  {
+    "id":"routine", "sourceStart":21.04, "sourceEnd":37.48,
+    "sourceText":"I wake up. I eat breakfast. I go jogging. I get the bus to work. I read a book on the bus.",
+    "sourceZh":"说话者按顺序介绍起床、早餐、慢跑、坐公交上班和在车上读书。",
+    "sourceQuestion":{"question":"说话者怎样去上班？","options":["走路","坐公交车","开车"],"correct":1,"why":"听到 bus 就能抓住答案；get the bus 在这里指乘公交。"},
+    "warmup":"朋友问你工作日怎么过。试着说说几点起床、怎么上班，以及下班后做什么。先不查词典。",
+    "lines":[
+      {"en":"On weekdays, I usually get up at half past seven.","zh":"工作日我通常七点半起床。","focus":"half past seven","tip":"half past seven 是 7:30；half 的 l 不发音，past 的 a 在英式英语中常为 /ɑː/。","answer":"half past seven","hint":"七点半","alternatives":["7:30","seven thirty"]},
+      {"en":"I make some tea before I check my messages.","zh":"我先泡点茶，再看消息。","focus":"before","tip":"before 把两件事串起来：先 make tea，后 check messages。","answer":"before","hint":"在……之前"},
+      {"en":"My office is nearby, so I walk to work.","zh":"办公室就在附近，所以我走路上班。","focus":"walk to work","tip":"walk 和 work 元音不同：/wɔːk/ 与 /wɜːk/。to 在中间弱读。","answer":"walk to work","hint":"走路去上班"},
+      {"en":"The walk takes about twenty minutes.","zh":"走过去大约要二十分钟。","focus":"takes about","tip":"主语 The walk 是单数，take 要加 s。about 表示大约。","answer":"takes about","hint":"大约花费（时间）"},
+      {"en":"At lunchtime, I often eat with a colleague.","zh":"午餐时间我经常和一位同事一起吃饭。","focus":"often","tip":"often 放在普通动词 eat 前面；它表达频率，不表示现在正在做。","answer":"often","hint":"经常"},
+      {"en":"After work, I sometimes go for a short run.","zh":"下班后，我有时会去短跑一会儿。","focus":"go for a short run","tip":"go for a run 是整个语块。for a 连读，中间不要逐词停顿。","answer":"go for a short run","hint":"去短跑一会儿"},
+      {"en":"I try to put my phone away before bed.","zh":"睡前我尽量把手机放到一边。","focus":"put my phone away","tip":"put ... away 是“收起／放到一边”。重读 phone 和 away。","answer":"put my phone away","hint":"把我的手机收起来"},
+      {"en":"At weekends, I sleep a little longer. How about you?","zh":"周末我会多睡一会儿。你呢？","focus":"How about you","tip":"把问题还给对方，日常交流就能继续。语调可以轻轻上扬。","answer":"How about you","hint":"你呢"}
+    ],
+    "quiz":{"question":"对话里哪件事只是有时会做？","options":["下班后跑步","工作日七点半起床","走路去办公室"],"correct":0,"why":"sometimes 出现在下班跑步这一句，表示有时；usually 表示通常。"},
+    "grammar":[
+      {"title":"一般现在时：重复发生的事","rule":"描述习惯时用一般现在时。I / you / we / they 后接动词原形；he / she / it 的肯定句通常加 -s。","example":"I walk to work. She walks to work.","zh":"我走路上班。她走路上班。","error":"不要把习惯句和正在进行的动作混在一起。"},
+      {"title":"频率副词放在哪里？","rule":"usually / often / sometimes 通常在普通动词前、be 动词后。频率是大致程度，并非固定百分比。","example":"I often cook. I am usually home by six.","zh":"我经常做饭。我通常六点前到家。","error":"不是 I usually am tired 的固定词序练习；入门先掌握 I am usually tired。"},
+      {"title":"用 before / after 给一天排序","rule":"before 与 after 后可以接名词，也可以接一个完整的句子。at 用于具体时刻。","example":"After breakfast, I leave home at eight.","zh":"早餐后，我八点离开家。","error":"at seven，不是 in seven；in the morning 则表示在早晨。"}
+    ],
+    "phrases":[
+      {"text":"half past seven","ipa":"/hɑːf pɑːst ˈsevən/","zh":"七点半","note":"half past + 小时，表示几点半。","example":"The class starts at half past seven."},
+      {"text":"walk to work","ipa":"/wɔːk tə wɜːk/","zh":"走路去上班","note":"to 弱读；注意 walk 和 work 的元音区别。","example":"I walk to work when it is sunny."},
+      {"text":"put it away","ipa":"/pʊt ɪt əˈweɪ/","zh":"把它收起来","note":"代词 it 要放在 put 和 away 中间。","example":"I finish my book and put it away."},
+      {"text":"How about you?","ipa":"/haʊ əˈbaʊt juː/","zh":"你呢？","note":"简短的回问，让聊天有来有往。","example":"I start at nine. How about you?"}
+    ],
+    "vocab":[
+      {"text":"weekday","ipa":"/ˈwiːkdeɪ/","zh":"n. 工作日（周一到周五）","note":"常用复数 on weekdays。","example":"The shop is busy on weekdays."},
+      {"text":"nearby","ipa":"/ˌnɪəˈbaɪ/","zh":"adv. / adj. 在附近的","note":"和 far away（很远）对照记忆。","example":"There is a small park nearby."},
+      {"text":"colleague","ipa":"/ˈkɒliːɡ/","zh":"n. 同事","note":"重音在第一个音节。","example":"My colleague helps me with the report."},
+      {"text":"usually","ipa":"/ˈjuːʒuəli/","zh":"adv. 通常","note":"中间的 /ʒ/ 像 vision 中的声音。","example":"We usually eat at home."}
+    ],
+    "templates":["On weekdays, I usually [动作] at [时间].","Before / After [事情], I [动作].","I sometimes [活动]. How about you?"],
+    "outputPrompt":"写一段自己的工作日：至少 3 句，包含一个时间、一个频率词和一个 before / after。",
+    "outputSample":"On weekdays, I get up at eight. After breakfast, I take the train to work. I sometimes read on the train.",
+    "outputChecklist":["写一个具体时间","用 usually / often / sometimes 表达频率","用 before / after 连接两件事"],
+    "culture":[{"title":"英式与美式的小差别","body":"英式英语常说 at weekends，美式英语常说 on weekends；两者都能表达“在周末”。学习时先选一种习惯用法。"},{"title":"聊日常不必流水账","body":"挑两三件有趣的小事，然后回问对方。比如聊通勤路上听什么，比从早到晚列出每件事更容易开启交流。"}]
+  },
+  {
+    "id":"food", "sourceStart":69.84, "sourceEnd":82.24,
+    "sourceText":"So, Neil, what is your favourite food? Well, that's a really difficult question, but I really like fish. Ah, me too!",
+    "sourceZh":"Beth 问 Neil 最喜欢什么食物。Neil 说很难选，但很喜欢鱼；Beth 表示自己也是。",
+    "sourceQuestion":{"question":"Neil 说自己很喜欢什么？","options":["意面","鱼","面包"],"correct":1,"why":"关键名词是 fish；另一位说 me too，表示她也有相同喜好。"},
+    "warmup":"你和新朋友一起吃午饭。试着说一种喜欢的食物、喜欢的原因，以及多久吃一次。",
+    "lines":[
+      {"en":"If I could choose lunch today, I would have noodles.","zh":"如果今天让我选午餐，我会吃面条。","focus":"would have noodles","tip":"这里 have 表示吃；would 表示设想中的选择，语气比直接陈述柔和。","answer":"would have noodles","hint":"会吃面条"},
+      {"en":"I like them because they are quick and easy to make.","zh":"我喜欢面条，因为做起来又快又简单。","focus":"because","tip":"because 后解释原因；them 指前一句的 noodles。","answer":"because","hint":"因为"},
+      {"en":"How often do you cook for yourself?","zh":"你多久自己做一次饭？","focus":"How often","tip":"how often 问频率；how long 问时长，两个问题别混淆。","answer":"How often","hint":"多久一次"},
+      {"en":"About three times a week. I enjoy trying new recipes.","zh":"一周大约三次。我喜欢尝试新食谱。","focus":"three times a week","tip":"three times a week 作为一个语块；a 在这里表示“每”。","answer":"three times a week","hint":"一周三次","alternatives":["3 times a week"]},
+      {"en":"I prefer fresh vegetables, but I don't mind frozen ones.","zh":"我更喜欢新鲜蔬菜，不过也不介意冷冻的。","focus":"don't mind","tip":"don't mind 表示“不介意”，不是“不喜欢”。ones 代替 vegetables。","answer":"don't mind","hint":"不介意","alternatives":["do not mind"]},
+      {"en":"Is there anything you would rather not eat?","zh":"有没有什么是你不太想吃的？","focus":"would rather not","tip":"would rather not + 动词原形，温和地表达不愿意。","answer":"would rather not","hint":"宁愿不……"},
+      {"en":"Very spicy food isn't really my thing.","zh":"很辣的食物不太对我的口味。","focus":"isn't really my thing","tip":"这是委婉表达个人喜好的方式。重读 really 和 thing。","answer":"isn't really my thing","hint":"不太是我喜欢的","alternatives":["is not really my thing"]},
+      {"en":"Let's try that little place nearby. They have plenty of choices.","zh":"我们试试附近那家小店吧。那里有很多选择。","focus":"plenty of","tip":"plenty of 意思是足够多的／很多。of 在语流里通常弱读。","answer":"plenty of","hint":"很多；足够多的"}
+    ],
+    "quiz":{"question":"对话里的人对冷冻蔬菜是什么态度？","options":["不能接受","不介意，但更喜欢新鲜的","比新鲜的更喜欢"],"correct":1,"why":"prefer 指更喜欢，don't mind 指不介意。两个表达的程度不同。"},
+    "grammar":[
+      {"title":"like / prefer / don't mind 的程度","rule":"like 表示喜欢；prefer 表示更喜欢；don't mind 表示不介意，并不意味着最喜欢。","example":"I prefer tea, but I don't mind coffee.","zh":"我更喜欢茶，不过咖啡也可以。","error":"不要把 don't mind 理解成 don't like。"},
+      {"title":"How often：问频率","rule":"How often + do you + 动词原形？可以用 once / twice / three times + a week 回答。","example":"How often do you bake? Twice a month.","zh":"你多久烘焙一次？一个月两次。","error":"一次是 once，两次是 twice；不是 every twice week。"},
+      {"title":"because 后面说原因","rule":"用 because + 完整句子，让你的答案从一个词变成一段表达。because of 后面则通常接名词或名词短语。","example":"I like soup because it is warm and comforting.","zh":"我喜欢汤，因为它暖和又让人舒服。","error":"入门先用 because it is…；不说 because of it is…。"}
+    ],
+    "phrases":[
+      {"text":"cook for myself","ipa":"/kʊk fə maɪˈself/","zh":"自己做饭给自己吃","note":"for 表示动作的受益对象。","example":"I cook for myself most evenings."},
+      {"text":"three times a week","ipa":"/θriː taɪmz ə wiːk/","zh":"一周三次","note":"a 在这里表示“每”。","example":"I buy fresh fruit three times a week."},
+      {"text":"not really my thing","ipa":"/nɒt ˈrɪəli maɪ θɪŋ/","zh":"不太是我喜欢的","note":"表达个人口味，比直接说难吃更委婉。","example":"Strong coffee is not really my thing."},
+      {"text":"plenty of choices","ipa":"/ˈplenti əv ˈtʃɔɪsɪz/","zh":"很多选择","note":"plenty of 后接可数名词复数或不可数名词。","example":"This cafe has plenty of choices."}
+    ],
+    "vocab":[
+      {"text":"recipe","ipa":"/ˈresəpi/","zh":"n. 食谱","note":"有三个音节，结尾读 /pi/，不是 silent e。","example":"This recipe is easy to follow."},
+      {"text":"vegetable","ipa":"/ˈvedʒtəbəl/","zh":"n. 蔬菜","note":"常见自然读法是三个音节，不要照字母逐个念。","example":"Add some vegetables to the soup."},
+      {"text":"frozen","ipa":"/ˈfrəʊzən/","zh":"adj. 冷冻的","note":"freeze 的过去分词，也用作形容词。","example":"I keep frozen peas at home."},
+      {"text":"spicy","ipa":"/ˈspaɪsi/","zh":"adj. 辛辣的","note":"spicy 强调香料或辛辣，hot 也可指温度热。","example":"This sauce is a little spicy."}
+    ],
+    "templates":["I like [食物] because [原因].","I cook / eat it [次数] a week.","I prefer [A], but I don't mind [B]."],
+    "outputPrompt":"向朋友推荐一种食物：说明喜欢的原因、多久吃一次，并委婉地说出一个不喜欢的口味。",
+    "outputSample":"I like dumplings because they are easy to share. I eat them once a week. Very sweet food is not really my thing.",
+    "outputChecklist":["用 because 解释喜好","用次数说明频率","用委婉表达说明不喜欢什么"],
+    "culture":[{"title":"谈口味，留一点余地","body":"食物喜好很个人化。别人做了饭时，可以感谢对方，再用 not really my thing 委婉表达；有过敏或饮食限制则应直接说明。"},{"title":"英式拼写 favourite","body":"英式拼写 favourite 中有 u，美式写 favorite。两种拼写都正确；本课以英式英语为主。"}]
+  }
+]

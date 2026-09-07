@@ -14,8 +14,9 @@ const display = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: '法语，正在发生｜从真实 Vlog 学会开口',
-  description: '为中文母语初学者设计的沉浸式法语学习网站：真实 Vlog、逐句听力、听写、跟读、词汇与文化。',
+  icons: { icon: '/english/favicon.svg' },
+  title: 'Little English｜每天听懂一点，开口多一点',
+  description: '从 BBC 英语短片段开始，通过场景听写、逐句跟读、词汇与错题复习，把英语用进生活。进度本地保存。',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
