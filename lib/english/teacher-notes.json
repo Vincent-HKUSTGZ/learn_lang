@@ -1,0 +1,230 @@
+{
+  "hello": {
+    "phraseZh": [
+      "听起来很有趣。你和谁一起去？",
+      "你愿意加入我们吗？",
+      "我空闲时画画。",
+      "谢谢你的帮助。"
+    ],
+    "wordExampleZh": [
+      "我们星期天去拜访朋友。",
+      "这里永远欢迎你。",
+      "我喜欢学习新事物。",
+      "我每天都学到一些东西。"
+    ],
+    "zhFocus": [
+      "第一次来",
+      "我叫",
+      "你来自哪里",
+      "住在",
+      "空闲时",
+      "正在学做饭",
+      "你想",
+      "谢谢你"
+    ],
+    "objective": "用姓名、住处和兴趣介绍自己，再用一个问题把对话接下去。",
+    "words": [
+      {
+        "pos": "名词 / 动词",
+        "synonym": "参观某地可说 see；拜访某人可说 call on（并非所有语境都能替换）。",
+        "story": "同一个 visit 既可以作动作，也可以作一次经历：visit a friend（拜访朋友）→ a visit to a friend（一次拜访）。visitor 是“来访者”，把词放在这个小词族里记。"
+      },
+      {
+        "pos": "形容词 / 动词 / 感叹词",
+        "synonym": "greet（迎接、问候，动词）；glad to see you（很高兴见到你）。",
+        "story": "Welcome! 是欢迎来访；feel welcome 表示感到被接纳；You're welcome 则常用于回应感谢。不要只给 welcome 记一个固定中文释义，要看整句话在做什么。"
+      },
+      {
+        "pos": "动词",
+        "synonym": "like（喜欢）；love（非常喜欢，程度通常更强）。",
+        "story": "enjoy 强调从某事中得到乐趣。enjoy a book、enjoy reading、enjoy yourself 是三种常用搭配；换成活动时注意 -ing。"
+      },
+      {
+        "pos": "动词",
+        "synonym": "study（学习、研究，强调投入的活动，不完全等于掌握）。",
+        "story": "learn to cook 是学习做饭这一技能；learn about food 是了解食物这个话题。learn → learner（学习者），把动词和人物名词一起记。"
+      }
+    ],
+    "reviews": [
+      {
+        "title": "先介绍自己，再补一个生活坐标",
+        "explain": "两句就能让对方知道你是谁、现在在哪里。不需要把身份资料一次说完。",
+        "formula": "I'm [名字]. I live in [城市].",
+        "example": "I'm Alex. I live in London.",
+        "zh": "我是 Alex。我住在伦敦。",
+        "application": "I'm Lin. I live in Chengdu.",
+        "applicationZh": "我是 Lin。我住在成都。"
+      },
+      {
+        "title": "用兴趣找到下一个话题",
+        "explain": "先说自己喜欢的活动，再让对方分享。enjoy 后使用动词 -ing。",
+        "formula": "I enjoy [动词-ing]. What do you enjoy doing?",
+        "example": "I enjoy reading. What do you enjoy doing?",
+        "zh": "我喜欢读书。你喜欢做什么？",
+        "application": "I enjoy cycling. What do you enjoy doing in your free time?",
+        "applicationZh": "我喜欢骑车。你空闲时喜欢做什么？"
+      },
+      {
+        "title": "接住对方的话，再发出邀请",
+        "explain": "回应体现你在听，邀请则让对话自然走向下一步。",
+        "formula": "That sounds [形容词]. Would you like to [动词原形]?",
+        "example": "That sounds fun. Would you like to sit with us?",
+        "zh": "听起来很有趣。你想和我们坐一起吗？",
+        "application": "That sounds interesting. Would you like to tell me more?",
+        "applicationZh": "听起来很有意思。你愿意再多讲一点吗？"
+      }
+    ]
+  },
+  "routine": {
+    "phraseZh": [
+      "课程七点半开始。",
+      "天气晴朗时，我走路上班。",
+      "我看完书后把它收起来。",
+      "我九点开始。你呢？"
+    ],
+    "wordExampleZh": [
+      "这家店工作日很忙。",
+      "附近有一个小公园。",
+      "我的同事帮我做报告。",
+      "我们通常在家吃饭。"
+    ],
+    "zhFocus": [
+      "七点半",
+      "先",
+      "走路上班",
+      "大约要",
+      "经常",
+      "去短跑一会儿",
+      "把手机放到一边",
+      "你呢"
+    ],
+    "objective": "用时间、频率与先后顺序，连贯地描述一个普通工作日。",
+    "words": [
+      {
+        "pos": "名词",
+        "synonym": "working day（工作日，具体范围与工作安排有关）。",
+        "story": "week + day 组成 weekday，通常指周一到周五；weekend 指周末。用 on weekdays / at weekends 对比记，而不是把两个词拆成孤立的词义。"
+      },
+      {
+        "pos": "副词 / 形容词",
+        "synonym": "close by（在附近）；not far away（不远）。",
+        "story": "a nearby office 中 nearby 修饰名词；My office is nearby 中它说明位置。不要说 nearby to my home；可改为 near my home。"
+      },
+      {
+        "pos": "名词",
+        "synonym": "co-worker / coworker（同事）；team member（团队成员，范围不一定相同）。",
+        "story": "colleague 指与你一起工作的人，不一定是朋友。my colleague、a new colleague、work with a colleague 都是能直接带进工作场景的搭配。"
+      },
+      {
+        "pos": "副词",
+        "synonym": "normally、generally（通常、大体上，需按语境选择）。",
+        "story": "usual 是“通常的”，加 -ly 得到 usually。比较 my usual breakfast（我平常的早餐）与 I usually eat breakfast（我通常吃早餐），就能看出形容词和副词的分工。"
+      }
+    ],
+    "reviews": [
+      {
+        "title": "先定时间，再说日常动作",
+        "explain": "用 On weekdays 框定场景，用 usually 留出例外，最后补具体时间。",
+        "formula": "On weekdays, I usually [动作] at [时间].",
+        "example": "On weekdays, I usually get up at half past seven.",
+        "zh": "工作日我通常七点半起床。",
+        "application": "On weekdays, I usually leave home at eight.",
+        "applicationZh": "工作日我通常八点出门。"
+      },
+      {
+        "title": "用先后关系串起两件事",
+        "explain": "把零散动作串起来，就不再只是列单词。注意 before 后提到的是后发生的事。",
+        "formula": "I [先做的事] before I [后做的事].",
+        "example": "I make some tea before I check my messages.",
+        "zh": "我先泡点茶，再查看消息。",
+        "application": "I pack my bag before I leave home.",
+        "applicationZh": "我先收拾包，再离开家。"
+      },
+      {
+        "title": "说一个小习惯，再把问题递回去",
+        "explain": "有时做的事用 sometimes；结尾一个简短的回问可以邀请对方分享。",
+        "formula": "I sometimes [活动]. How about you?",
+        "example": "I sometimes go for a short run. How about you?",
+        "zh": "我有时会去短跑一会儿。你呢？",
+        "application": "I sometimes read on the bus. How about you?",
+        "applicationZh": "我有时在公交车上看书。你呢？"
+      }
+    ]
+  },
+  "food": {
+    "phraseZh": [
+      "大多数晚上我都自己做饭。",
+      "我每周买三次新鲜水果。",
+      "浓咖啡不太对我的口味。",
+      "这家咖啡馆有很多选择。"
+    ],
+    "wordExampleZh": [
+      "这个食谱很容易照着做。",
+      "往汤里加些蔬菜。",
+      "我家里备着冷冻豌豆。",
+      "这个酱有一点辣。"
+    ],
+    "zhFocus": [
+      "会吃面条",
+      "因为",
+      "多久",
+      "一周大约三次",
+      "不介意",
+      "不太想",
+      "不太对我的口味",
+      "很多"
+    ],
+    "objective": "说出食物喜好，补充原因和频率，并委婉表达不喜欢的口味。",
+    "words": [
+      {
+        "pos": "名词",
+        "synonym": "cooking instructions（烹饪步骤，解释性表达，不是所有用法的同义词）。",
+        "story": "recipe 是“怎样做”的配方，dish 是做好的菜。follow a recipe 表示照着食谱做；try a new recipe 表示试一个新做法。"
+      },
+      {
+        "pos": "名词",
+        "synonym": "veg（英式非正式表达）；greens（绿叶蔬菜，范围更窄）。",
+        "story": "日常谈多种蔬菜时常用 vegetables；vegetable soup 中的 vegetable 修饰 soup，通常用单数形式。先记一份食物搭配，再记词本身。"
+      },
+      {
+        "pos": "形容词；freeze 的过去分词",
+        "synonym": "deep-frozen（深度冷冻的）；chilled（冷藏的，不等于冷冻）。",
+        "story": "freeze → froze → frozen 是同一动词的三种形式。frozen vegetables 中 frozen 作形容词，说明蔬菜的保存状态，与 fresh vegetables 对比。"
+      },
+      {
+        "pos": "形容词",
+        "synonym": "hot（可指辣，也可指温度高）；well-spiced（香料丰富，不一定很辣）。",
+        "story": "spice（香料）去掉末尾 e，加 -y 得到 spicy。比较 spicy food（辛辣食物）与 hot soup（温度高的汤），避免把“辣”和“烫”混为一谈。"
+      }
+    ],
+    "reviews": [
+      {
+        "title": "喜好后面跟一个理由",
+        "explain": "从“我喜欢面条”往前走一步：说明为什么喜欢。because 后面接完整句子。",
+        "formula": "I like [食物] because [主语 + 动词 + 其他成分].",
+        "example": "I like noodles because they are quick and easy to make.",
+        "zh": "我喜欢面条，因为做起来又快又简单。",
+        "application": "I like soup because it is warm and comforting.",
+        "applicationZh": "我喜欢汤，因为它暖和又让人舒服。"
+      },
+      {
+        "title": "用次数让描述更具体",
+        "explain": "回答多久吃或做一次时，用次数加时间单位。a 在这里表示“每”。",
+        "formula": "I cook / eat [食物] [次数] a week.",
+        "example": "I cook for myself three times a week.",
+        "zh": "我一周自己做三次饭。",
+        "application": "I eat dumplings once a week.",
+        "applicationZh": "我每周吃一次饺子。"
+      },
+      {
+        "title": "表达偏好，也留出余地",
+        "explain": "prefer 说首选，don't mind 说明另一种也能接受；并不意味着讨厌后者。",
+        "formula": "I prefer [A], but I don't mind [B].",
+        "example": "I prefer fresh vegetables, but I don't mind frozen ones.",
+        "zh": "我更喜欢新鲜蔬菜，但也不介意冷冻的。",
+        "application": "I prefer tea, but I don't mind coffee.",
+        "applicationZh": "我更喜欢茶，不过咖啡也可以。"
+      }
+    ]
+  }
+}

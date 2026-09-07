@@ -68,3 +68,22 @@ for(const base of ['http://localhost:3000/lesson?id=hello','https://zhensun.cn/l
   assert.equal(next.searchParams.get('id'),'routine');
 }
 console.log('PASS: answer matching, independent-credit rules, retry, robust storage, 3 complete lessons, 24 exercises, 54 audio assets, and aligned timelines.');
+const teacher=JSON.parse(fs.readFileSync(root+'lib/english/teacher-notes.json','utf8'));
+for(const c of courses){
+  const t=teacher[c.id];
+  assert.equal(t.zhFocus.length,8);assert.equal(t.words.length,4);assert.equal(t.reviews.length,3);
+  assert.equal(t.phraseZh.length,4);assert.equal(t.wordExampleZh.length,4);
+  c.lines.forEach((l,i)=>assert(l.zh.includes(t.zhFocus[i]),`${c.id} Chinese focus ${i} exists`));
+  t.words.forEach(w=>assert(w.pos&&w.synonym&&w.story));
+  t.reviews.forEach(r=>assert(r.formula&&r.example&&r.zh&&r.application&&r.applicationZh));
+  const vtt=fs.readFileSync(root+`public/english/${c.id}-study.vtt`,'utf8');
+  assert.equal((vtt.match(/ --> /g)||[]).length,8);
+  c.lines.forEach(l=>{assert(vtt.includes(l.en));assert(vtt.includes(l.zh));});
+  const video=fs.readFileSync(root+`public/english/${c.id}-study.mp4`);assert.equal(video.toString('ascii',4,8),'ftyp');
+}
+const handout=ts.createSourceFile('page.tsx',fs.readFileSync(root+'app/lesson/page.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+const sections=[];
+function visit(node){if(ts.isJsxOpeningElement(node)&&node.tagName.getText(handout)==='Section'){const title=node.attributes.properties.find(p=>p.name?.getText(handout)==='title');sections.push(title.initializer.text);}ts.forEachChild(node,visit);}
+visit(handout);
+assert.deepEqual(sections,['用英语说出这段话','看无字幕视频','听音频填空','中英对照','本期精讲','文本回顾','相关文化']);
+console.log('PASS: seven reference sections in order, complete teacher notes, aligned Chinese highlights and 24 bilingual subtitle cues.');
