@@ -321,10 +321,13 @@ export default function HandoutLesson() {
         </Section>
         <Section
           n="二"
-          title="看无字幕课件"
+          title="无字幕盲听"
           tip="先完整听一遍，理解人物在做什么；第二遍再留意陌生表达。"
         >
-          <Video id={meta.id} language={meta.language} />
+          <AudioPlayer
+            src={audio('practice')}
+            label={`${meta.title} · 无字幕盲听`}
+          />
         </Section>
         <Section
           n="三"

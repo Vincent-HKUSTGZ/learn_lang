@@ -127,6 +127,10 @@ assert(source.includes('E₀ = (1 + p)/p².'));
 assert(source.includes('½ Var(Y(Z))'));
 const component = read('components/handout-lesson.tsx');
 assert.equal((component.match(/<Section\s+n=/g) || []).length, 7);
+const blindListening = component.match(/<Section\s+n="二"[\s\S]*?<\/Section>/)?.[0];
+assert(blindListening?.includes('<AudioPlayer'));
+assert(!blindListening?.includes('<Video'));
+assert(component.includes('language={meta.language} subtitles'));
 assert(
   /!p\.revealed\[i\]\s*&&\s*isCorrect/.test(component),
   'No independent credit after revealing',
