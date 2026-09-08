@@ -759,3 +759,350 @@
     break-inside: avoid;
   }
 }
+.language-switch {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: #edf1f5;
+  border: 1px solid #dae0e6;
+  border-radius: 14px;
+  width: fit-content;
+  margin: 28px 0 16px;
+}
+.language-switch button {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #425466;
+  font-size: 17px;
+  cursor: pointer;
+}
+.language-switch button[aria-pressed='true'] {
+  background: #173e57;
+  color: white;
+  box-shadow: 0 2px 5px #142c4820;
+}
+.language-switch span {
+  margin-left: 8px;
+  font-size: 14px;
+}
+.library-count {
+  color: #657384;
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+.simple-course .course-book-cover {
+  padding: 26px;
+  min-height: 172px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  background: #e8eff8;
+  color: #214c77;
+  border-bottom: 1px solid #d5e0ed;
+}
+.course-book-cover.fr {
+  background: #e9f0ed;
+  color: #23594c;
+}
+.course-book-cover span {
+  font-family: Georgia, serif;
+  font-size: 23px;
+}
+.course-book-cover small {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.pdf-handout .pdf-course-heading {
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #e0e5eb;
+}
+.pdf-course-heading h1 {
+  font-size: clamp(28px, 4.5vw, 42px);
+  line-height: 1.35;
+  margin: 10px 0;
+}
+.pdf-course-heading .course-subtitle {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 23px;
+  color: #49677c;
+}
+.pdf-course-heading > p {
+  margin: 12px 0;
+}
+.pdf-course-heading > a {
+  color: #25608a;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pdf-handout .source-caption {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #657383;
+}
+.pdf-handout .handout-prose {
+  font-size: 17px;
+  line-height: 2.1;
+}
+.pdf-handout .inline-dictation {
+  font-size: 17px;
+  line-height: 2.8;
+  margin: 24px 0;
+}
+.pdf-handout .blank-group {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: baseline;
+  gap: 5px;
+  margin: 0 3px;
+}
+.pdf-handout .blank-number {
+  font-size: 13px;
+  color: #6b7683;
+}
+.pdf-handout .blank-group input {
+  min-width: 0;
+  max-width: 100%;
+  background: #f7f9fc;
+  border: 0;
+  border-bottom: 2px solid #879eb3;
+  padding: 0 5px;
+  line-height: 1.8;
+  color: #173e57;
+  border-radius: 3px 3px 0 0;
+}
+.pdf-handout .blank-group input:focus {
+  outline: 2px solid #5493c8;
+  outline-offset: 3px;
+}
+.pdf-handout .blank-group small {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.pdf-handout .blank-group .answer-right {
+  background: #edf8f0;
+  border-color: #2c8355;
+}
+.pdf-handout .blank-group .answer-wrong {
+  background: #fff0ea;
+  border-color: #b85438;
+}
+.pdf-handout .practice-feedback {
+  min-height: 25px;
+  margin: 16px 0;
+  color: #315c70;
+  line-height: 1.7;
+}
+.pdf-handout .retry-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  margin: 8px 0;
+}
+.pdf-handout .answer-reference {
+  border: 1px solid #dde5ec;
+  background: #f9fbfd;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+.pdf-handout .parallel-heading {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.pdf-handout .parallel-heading p {
+  margin: 0;
+}
+.pdf-handout .parallel-heading .clip-control {
+  position: static;
+  flex-shrink: 0;
+}
+.pdf-handout .parallel-line {
+  padding: 20px 0;
+}
+.pdf-handout .parallel-line > p {
+  margin: 8px 0;
+}
+.pdf-handout .parallel-line .translation {
+  color: #657383;
+  font-size: 16px;
+}
+.pdf-handout .knowledge-item {
+  margin: 16px 0 24px;
+  border: 0;
+}
+.pdf-handout .knowledge-item > summary {
+  padding: 10px 14px;
+  background: #fff2e8;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.pdf-handout .phrase-note > summary {
+  background: #fff8dc;
+}
+.pdf-handout .word-note > summary {
+  background: #fceef4;
+}
+.pdf-handout .knowledge-body {
+  margin-top: 12px;
+  padding: 18px 22px;
+  border: 1px solid #cdd5df;
+  border-radius: 5px;
+  background: #f5f7f9;
+  line-height: 1.9;
+}
+.pdf-handout .knowledge-body p {
+  margin: 7px 0;
+}
+.pdf-handout code {
+  color: #b63b70;
+  background: #edf0f4;
+  padding: 2px 5px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+}
+.pdf-handout .teacher-tip {
+  font-size: 15px;
+  color: #596c7a;
+}
+.pdf-handout .complete-handout {
+  scroll-margin-top: 25px;
+  border-top: 1px solid #d9e0e6;
+  padding-top: 24px;
+  margin-top: 36px;
+}
+.pdf-handout .source-tools {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0;
+}
+.pdf-handout .source-tools input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #bac7d2;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 16px;
+  background: #fff;
+}
+.pdf-handout .source-page {
+  border: 1px solid #dce3e9;
+  border-radius: 5px;
+  margin: 10px 0;
+  background: #fff;
+}
+.pdf-handout .source-page > summary {
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #345267;
+  line-height: 1.6;
+}
+.pdf-handout .source-page-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 4px 22px 20px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.pdf-handout .read-page {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  border-top: 1px solid #e5eaf0;
+  padding: 12px 18px;
+  font-size: 14px;
+  color: #546676;
+}
+.pdf-handout .read-page input {
+  width: 17px;
+  height: 17px;
+  accent-color: #245775;
+}
+.pdf-handout .review-templates {
+  padding: 0 22px;
+  background: #f6f8fa;
+  border: 1px solid #e2bc92;
+  border-radius: 6px;
+}
+.pdf-handout .review-templates article {
+  padding: 20px 0;
+}
+.pdf-handout .review-templates article + article {
+  border-top: 1px solid #d4dce4;
+}
+.pdf-handout .review-templates p {
+  margin: 10px 0;
+  line-height: 1.9;
+}
+.pdf-handout .draft-label {
+  display: block;
+  margin: 24px 0 12px;
+  font-weight: 600;
+}
+.pdf-handout textarea {
+  min-height: 140px;
+  font-size: 16px;
+}
+.pdf-handout .saved-draft {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.pdf-handout .handout-finish {
+  margin-top: 30px;
+  padding: 28px 0;
+  border-top: 1px solid #d9e2e9;
+}
+.pdf-handout .handout-finish h2 {
+  font-size: 24px;
+}
+.pdf-handout .handout-finish p {
+  color: #5b7080;
+}
+.pdf-handout .handout-finish .handout-actions {
+  margin: 20px 0;
+}
+@media (max-width: 600px) {
+  .language-switch {
+    width: 100%;
+  }
+  .language-switch button {
+    flex: 1;
+    padding: 12px 8px;
+  }
+  .language-switch span {
+    display: block;
+    margin: 3px 0 0;
+  }
+  .pdf-handout .source-tools {
+    flex-direction: column;
+  }
+  .pdf-handout .source-page-text {
+    padding: 4px 14px 16px;
+  }
+  .pdf-handout .knowledge-body {
+    padding: 14px;
+  }
+  .pdf-handout .blank-group {
+    max-width: 95%;
+  }
+  .pdf-handout .inline-dictation {
+    font-size: 16px;
+  }
+  .pdf-handout .review-templates {
+    padding: 0 14px;
+  }
+}

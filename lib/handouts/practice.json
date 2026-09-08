@@ -1,0 +1,786 @@
+[
+  {
+    "id": "en-classmates",
+    "sourcePages": "第 1 页，初次见面",
+    "objective": "用一个问题开启交流，再自然地互相介绍。",
+    "lines": [
+      [
+        "You",
+        "Hey, is this seat taken?",
+        "嗨，这个座位有人吗？",
+        "is this seat taken",
+        "这个座位有人吗"
+      ],
+      [
+        "Camille",
+        "No, go ahead.",
+        "没有，坐吧。",
+        "go ahead",
+        "坐吧"
+      ],
+      [
+        "You",
+        "Thanks. Is this the room for the stochastic-processes class?",
+        "谢谢。这是随机过程课的教室吗？",
+        "Is this the room for",
+        "这是"
+      ],
+      [
+        "Camille",
+        "I hope so. Otherwise, we’re both in the wrong place.",
+        "希望是。不然我们俩都走错地方了。",
+        "in the wrong place",
+        "走错地方"
+      ],
+      [
+        "You",
+        "That would be a strong start to the semester.",
+        "那可真是个精彩的学期开始啊。（玩笑）",
+        "a strong start",
+        "精彩的学期开始"
+      ],
+      [
+        "Camille",
+        "Exactly. I’m Camille, by the way.",
+        "就是啊。对了，我叫 Camille。",
+        "by the way",
+        "对了"
+      ],
+      [
+        "You",
+        "Nice to meet you. I’m Alex.",
+        "很高兴认识你。我叫 Alex。",
+        "Nice to meet you",
+        "很高兴认识你"
+      ],
+      [
+        "Camille",
+        "Nice to meet you too. Are you in the El Karoui program?",
+        "我也很高兴认识你。你读的是 El Karoui 项目吗？",
+        "Are you in",
+        "你读的是"
+      ]
+    ],
+    "grammar": [
+      [
+        "用一般疑问句轻松搭话",
+        "Is / Are + 主语 + 补充信息？问座位或课程，比一上来长篇介绍更自然。",
+        "Is this the right classroom?",
+        "这是正确的教室吗？",
+        "this 用 is；you 用 are。"
+      ],
+      [
+        "would：带一点幽默的假设",
+        "That would be… 对尚未确认的情况作评价。本课 strong start 是友好的自嘲。",
+        "That would be a good way to meet people.",
+        "那会是认识大家的好办法。",
+        "不要把这个玩笑理解成真的表扬走错教室。"
+      ]
+    ],
+    "phrases": [
+      [
+        "go ahead",
+        "/ɡəʊ əˈhed/",
+        "请吧；做吧",
+        "表示允许对方继续或入座。"
+      ],
+      [
+        "by the way",
+        "/baɪ ðə weɪ/",
+        "对了；顺便说一下",
+        "轻轻转入姓名等新信息。"
+      ],
+      [
+        "Nice to meet you",
+        "/naɪs tə miːt juː/",
+        "很高兴认识你",
+        "初次见面用；再次见面可说 Nice to see you。"
+      ]
+    ],
+    "vocab": [
+      [
+        "seat",
+        "/siːt/",
+        "名词",
+        "座位",
+        "place（此处近义）",
+        "与 sit（坐）对比记忆。"
+      ],
+      [
+        "semester",
+        "/sɪˈmestə/",
+        "名词",
+        "学期",
+        "term",
+        "a new semester：新学期。"
+      ],
+      [
+        "otherwise",
+        "/ˈʌðəwaɪz/",
+        "副词",
+        "否则；不然",
+        "if not",
+        "引出前一个情况不成立时的结果。"
+      ]
+    ],
+    "reviews": [
+      [
+        "情境提问 → 介绍自己",
+        "Is this…? → Thanks. → I’m…, by the way.",
+        "Is this seat free? Thanks. I’m Lin, by the way.",
+        "这里空着吗？谢谢。对了，我叫 Lin。"
+      ],
+      [
+        "回答 → 补充 → 问回去",
+        "回答 + 一点补充 + What about you?",
+        "I’m studying mathematics. I just moved here. What about you?",
+        "我学数学，刚搬来这里。你呢？"
+      ]
+    ],
+    "culture": "围绕共同的课程或教室提问，就有了自然的话题。教材中的姓名、学校和经历是练习角色，请替换成自己的真实情况。完整课件还包含课程讨论、吃饭、兴趣、约活动和群聊。"
+  },
+  {
+    "id": "en-academic",
+    "sourcePages": "第 2 页，澄清论证",
+    "objective": "先说明听懂的部分，再准确指出疑问。",
+    "lines": [
+      [
+        "Alex",
+        "I follow the unbiasedness argument. What I don’t see is why the variance must be lower.",
+        "我理解无偏性的论证。我不明白的是，为什么方差一定更小。",
+        "What I don’t see is",
+        "我不明白的是"
+      ],
+      [
+        "Léa",
+        "My intuition was that the two payoffs should move in opposite directions because they are generated using opposite shocks.",
+        "我的直觉是，两个收益应该向相反方向变动，因为它们由相反的扰动生成。",
+        "in opposite directions",
+        "向相反方向"
+      ],
+      [
+        "Daniel",
+        "That sounds plausible, but I think we need to be more precise. Using opposite shocks does not automatically guarantee that the payoffs are negatively correlated.",
+        "这听起来有道理，但我认为我们需要更严谨一些。相反扰动并不能自动保证收益负相关。",
+        "we need to be more precise",
+        "我们需要更严谨一些"
+      ],
+      [
+        "Léa",
+        "You’re right. I phrased that too strongly.",
+        "你说得对。我刚才的表述太绝对了。",
+        "phrased that too strongly",
+        "表述太绝对"
+      ],
+      [
+        "Alex",
+        "Could we write the variance explicitly? That might make the condition clearer.",
+        "我们可以把方差明确写出来吗？这样或许能让条件更清楚。",
+        "That might make",
+        "这样或许能让"
+      ]
+    ],
+    "grammar": [
+      [
+        "What… is…：聚焦疑问",
+        "What I don’t see is… 指出具体的不理解之处，不是否定整个论证。",
+        "What I don’t see is why we need this assumption.",
+        "我不明白的是为什么需要这个假设。",
+        "间接疑问用陈述语序 why we need，不是 why do we need。"
+      ],
+      [
+        "might：保留合理的不确定性",
+        "might 比 will 审慎，适合提出可能有帮助的下一步。",
+        "A simple example might make the idea clearer.",
+        "一个简单例子或许能把想法讲清楚。",
+        "might 后接动词原形，不加 to。"
+      ]
+    ],
+    "phrases": [
+      [
+        "That sounds plausible",
+        "/ðæt saʊndz ˈplɔːzəbəl/",
+        "听起来有道理",
+        "认可合理性，不代表已经证明。"
+      ],
+      [
+        "be more precise",
+        "/biː mɔː prɪˈsaɪs/",
+        "更精确一些",
+        "用于定义、假设和推导。"
+      ],
+      [
+        "I’m with you so far",
+        "/aɪm wɪð juː səʊ fɑː/",
+        "到这里我都理解",
+        "先建立共识，再提出疑问。"
+      ]
+    ],
+    "vocab": [
+      [
+        "variance",
+        "/ˈveəriəns/",
+        "名词",
+        "方差",
+        "variability（相关概念）",
+        "the variance of an estimator：估计量的方差。"
+      ],
+      [
+        "assumption",
+        "/əˈsʌmpʃən/",
+        "名词",
+        "假设；前提",
+        "premise",
+        "assume 是动词，assumption 是名词。"
+      ],
+      [
+        "explicitly",
+        "/ɪkˈsplɪsɪtli/",
+        "副词",
+        "明确地",
+        "clearly",
+        "explicit 加 -ly，修饰 write 等动作。"
+      ]
+    ],
+    "reviews": [
+      [
+        "理解一部分，再指出缺口",
+        "I follow… What I don’t see is why…",
+        "I follow the setup. What I don’t see is why the terms are independent.",
+        "我理解设定，但不明白为什么各项独立。"
+      ],
+      [
+        "提出具体的验证方法",
+        "Could we…? That might…",
+        "Could we check a simple case? That might reveal the problem.",
+        "可以检查一个简单情况吗？那或许能暴露问题。"
+      ]
+    ],
+    "culture": "清楚地区分直觉、假设与证明，比听起来很肯定更重要。技术补充：比较反变量法与独立抽样时应固定计算预算；相反输入不保证任意收益函数都负相关。完整课件保留推导、反例和分工讨论。"
+  },
+  {
+    "id": "en-quant",
+    "sourcePages": "第 1 页，面试开场（节选）",
+    "objective": "自然完成寒暄，把自我介绍的重点说清楚。",
+    "lines": [
+      [
+        "Interviewer",
+        "Hi, thanks for joining us today. How are you doing?",
+        "你好，谢谢你今天参加面试。最近怎么样？",
+        "How are you doing",
+        "最近怎么样"
+      ],
+      [
+        "Candidate",
+        "I’m doing well, thank you. I’ve been looking forward to the conversation. How are you?",
+        "我很好，谢谢。我一直很期待这次交流。您呢？",
+        "looking forward to",
+        "期待"
+      ],
+      [
+        "Interviewer",
+        "I’m good, thanks. Did you have any trouble finding the office?",
+        "我很好，谢谢。找办公室顺利吗？",
+        "have any trouble finding",
+        "找办公室顺利吗"
+      ],
+      [
+        "Candidate",
+        "Not at all. I gave myself some extra time, so I arrived a little early.",
+        "完全没问题。我给自己多留了一些时间，所以稍微早到了一点。",
+        "some extra time",
+        "多留了一些时间"
+      ],
+      [
+        "Interviewer",
+        "Great. Before we get into the technical questions, could you briefly introduce yourself?",
+        "很好。在进入技术问题前，能请你简短介绍一下自己吗？",
+        "briefly introduce yourself",
+        "简短介绍一下自己"
+      ],
+      [
+        "Candidate",
+        "Of course. I studied mathematics and statistics, with a particular focus on probability, stochastic processes, and numerical methods.",
+        "当然。我学习数学和统计学，尤其关注概率论、随机过程和数值方法。",
+        "with a particular focus on",
+        "尤其关注"
+      ]
+    ],
+    "grammar": [
+      [
+        "look forward to + 名词 / 动名词",
+        "to 是介词，后面可以接 the conversation，也可以接 meeting you。",
+        "I’m looking forward to discussing the project.",
+        "我期待讨论这个项目。",
+        "不是 looking forward to discuss。"
+      ],
+      [
+        "have trouble doing：遇到困难",
+        "trouble 后接动名词。面试官只是关心到达是否顺利。",
+        "I had no trouble finding the building.",
+        "我顺利找到了这栋楼。",
+        "简短回应，让对话进入正题。"
+      ]
+    ],
+    "phrases": [
+      [
+        "with a particular focus on",
+        "/wɪð ə pəˈtɪkjələ ˈfəʊkəs ɒn/",
+        "尤其关注",
+        "从广泛背景收束到相关领域。"
+      ],
+      [
+        "Not at all",
+        "/nɒt ət ɔːl/",
+        "完全没有",
+        "此处回应是否遇到困难。"
+      ],
+      [
+        "Let me check that",
+        "/let miː tʃek ðæt/",
+        "让我核对一下",
+        "比仓促断言更稳妥。"
+      ]
+    ],
+    "vocab": [
+      [
+        "briefly",
+        "/ˈbriːfli/",
+        "副词",
+        "简要地",
+        "concisely",
+        "来自 brief（简短的）。"
+      ],
+      [
+        "probability",
+        "/ˌprɒbəˈbɪləti/",
+        "名词",
+        "概率；概率论",
+        "likelihood（一般语境近义）",
+        "likelihood 在统计中也有特定含义。"
+      ],
+      [
+        "numerical",
+        "/njuːˈmerɪkəl/",
+        "形容词",
+        "数值的",
+        "computational（相关词）",
+        "numerical methods：数值方法。"
+      ]
+    ],
+    "reviews": [
+      [
+        "背景 → 重点",
+        "I studied…, with a particular focus on…",
+        "I studied computer science, with a particular focus on algorithms.",
+        "我学计算机科学，尤其关注算法。"
+      ],
+      [
+        "给思考留空间",
+        "My initial thought is… Let me check…",
+        "My initial thought is to use conditioning. Let me check the assumptions first.",
+        "我初步想使用条件化。让我先核对假设。"
+      ]
+    ],
+    "culture": "面试表达要服务于真实推理，不是背诵履历。完整课件包含连续两个六的期望、高斯条件分布、行为面试和反问。先口述状态和假设，再写公式；发现错误后明确修正。"
+  },
+  {
+    "id": "fr-daily",
+    "sourcePages": "第 1 页，超市询问商品",
+    "objective": "礼貌询问商品位置，听懂区域与方位。",
+    "lines": [
+      [
+        "Vous",
+        "Bonjour, excusez-moi, vous savez où je peux trouver le riz, s’il vous plaît ?",
+        "您好，不好意思，请问您知道在哪里能找到米吗？",
+        "où je peux trouver",
+        "在哪里能找到"
+      ],
+      [
+        "Employé",
+        "Oui, c’est dans le rayon des produits du monde, au fond du magasin.",
+        "知道，在进口食品区，商店最里面。",
+        "au fond du magasin",
+        "商店最里面"
+      ],
+      [
+        "Vous",
+        "D’accord. Et les sacs-poubelle, c’est dans quel rayon ?",
+        "好的。那垃圾袋在哪个区域？",
+        "dans quel rayon",
+        "在哪个区域"
+      ],
+      [
+        "Employé",
+        "Dans le rayon entretien, juste à côté des produits ménagers.",
+        "在清洁用品区，就在家用清洁产品旁边。",
+        "juste à côté",
+        "就在"
+      ],
+      [
+        "Vous",
+        "Très bien, merci beaucoup.",
+        "好的，非常感谢。",
+        "merci beaucoup",
+        "非常感谢"
+      ]
+    ],
+    "grammar": [
+      [
+        "où je peux trouver：间接问句",
+        "Vous savez où je peux trouver…? 礼貌询问商品位置。où 表示在哪里。",
+        "Vous savez où je peux trouver le lait ?",
+        "您知道在哪里能找到牛奶吗？",
+        "口语可直接用语调提问，où 保留重音。"
+      ],
+      [
+        "à côté de：在……旁边",
+        "de + les 合成 des；de + le 合成 du。",
+        "C’est à côté du café.",
+        "它在咖啡馆旁边。",
+        "不是 de les produits，而是 des produits。"
+      ]
+    ],
+    "phrases": [
+      [
+        "s’il vous plaît",
+        "/sil vu plɛ/",
+        "请",
+        "与陌生人、店员交流使用 vous。"
+      ],
+      [
+        "au fond du magasin",
+        "/o fɔ̃ dy maɡazɛ̃/",
+        "商店最里面",
+        "fond 的鼻化元音不要读成英语。"
+      ],
+      [
+        "D’accord",
+        "/dakɔʁ/",
+        "好的；明白了",
+        "表示理解对方的信息。"
+      ]
+    ],
+    "vocab": [
+      [
+        "le rayon",
+        "/ʁɛjɔ̃/",
+        "阳性名词",
+        "货架区；部门",
+        "la section（相关词）",
+        "dans quel rayon：在哪个区域。"
+      ],
+      [
+        "le riz",
+        "/ʁi/",
+        "阳性名词",
+        "米；米饭",
+        "无常用完全同义词",
+        "词尾 z 不发音。"
+      ],
+      [
+        "le magasin",
+        "/maɡazɛ̃/",
+        "阳性名词",
+        "商店",
+        "la boutique（小商店）",
+        "不要与英语 magazine（杂志）混淆。"
+      ]
+    ],
+    "reviews": [
+      [
+        "礼貌开头 + 需求",
+        "Bonjour, excusez-moi. Vous savez où je peux trouver… ?",
+        "Bonjour, excusez-moi. Vous savez où je peux trouver les œufs ?",
+        "您好，不好意思。您知道鸡蛋在哪里吗？"
+      ],
+      [
+        "确认位置，再道谢",
+        "C’est… ? D’accord, merci beaucoup.",
+        "C’est au fond du magasin ? D’accord, merci beaucoup.",
+        "在商店最里面吗？好的，非常感谢。"
+      ]
+    ],
+    "culture": "先说 Bonjour，再提出需求，让开场更自然。完整课件包含点餐、交通、地址、维修与取件。路线用于语言练习，不是实时出行指引；精确住址已替换为练习占位符。"
+  },
+  {
+    "id": "fr-help",
+    "sourcePages": "第 3–4 页，请工作人员放慢语速",
+    "objective": "听不懂时主动请求放慢、分步说明，并确认下一步。",
+    "lines": [
+      [
+        "Employée",
+        "Vous devez d’abord remplir ce formulaire, puis prendre rendez-vous en ligne.",
+        "您需要先填写这张表，然后在线预约。",
+        "prendre rendez-vous en ligne",
+        "在线预约"
+      ],
+      [
+        "Vous",
+        "Excusez-moi, je débute en français. Vous pourriez parler un peu plus lentement, s’il vous plaît ?",
+        "不好意思，我刚开始学法语。您能说得稍微慢一点吗？",
+        "un peu plus lentement",
+        "稍微慢一点"
+      ],
+      [
+        "Employée",
+        "Oui, bien sûr. D’abord, vous remplissez ce formulaire.",
+        "可以，当然。首先，您填写这张表。",
+        "D’abord",
+        "首先"
+      ],
+      [
+        "Vous",
+        "D’accord. Et ensuite, je dois prendre rendez-vous sur Internet, c’est bien ça ?",
+        "好的。然后我需要在网上预约，是这样吗？",
+        "c’est bien ça",
+        "是这样吗"
+      ],
+      [
+        "Employée",
+        "Oui. Le site est indiqué en bas de la page.",
+        "是的。网站标在页面底部。",
+        "en bas de la page",
+        "页面底部"
+      ],
+      [
+        "Vous",
+        "Je vois. Est-ce que vous pourriez entourer l’adresse du site pour moi ?",
+        "明白了。您能帮我圈出网址吗？",
+        "Est-ce que vous pourriez",
+        "您能"
+      ],
+      [
+        "Employée",
+        "Bien sûr.",
+        "当然。",
+        "Bien sûr",
+        "当然"
+      ],
+      [
+        "Vous",
+        "Merci beaucoup. C’est très gentil.",
+        "非常感谢。您真好。",
+        "C’est très gentil",
+        "您真好"
+      ]
+    ],
+    "grammar": [
+      [
+        "vous pourriez + 动词原形：礼貌请求",
+        "pourriez 是 pouvoir 的条件式，用于客气地请求帮助。",
+        "Est-ce que vous pourriez répéter ?",
+        "您能再说一遍吗？",
+        "后接 répéter、parler 等动词原形。"
+      ],
+      [
+        "d’abord → ensuite：给流程排序",
+        "首先，再然后。复述顺序能帮助双方确认信息。",
+        "D’abord, je remplis le formulaire. Ensuite, je prends rendez-vous.",
+        "首先我填表，然后我预约。",
+        "不必一次记住全部，可以请对方分步骤说。"
+      ]
+    ],
+    "phrases": [
+      [
+        "un peu plus lentement",
+        "/œ̃ pø ply lɑ̃tmɑ̃/",
+        "稍微慢一点",
+        "plus 修饰副词 lentement。"
+      ],
+      [
+        "c’est bien ça",
+        "/sɛ bjɛ̃ sa/",
+        "是这样吗",
+        "用升调确认自己的理解。"
+      ],
+      [
+        "C’est très gentil",
+        "/sɛ tʁɛ ʒɑ̃ti/",
+        "您真好",
+        "gentil 的词尾 l 不发音。"
+      ]
+    ],
+    "vocab": [
+      [
+        "le formulaire",
+        "/fɔʁmylɛʁ/",
+        "阳性名词",
+        "表格；申请表",
+        "le document（更广义）",
+        "remplir un formulaire：填写表格。"
+      ],
+      [
+        "le rendez-vous",
+        "/ʁɑ̃devu/",
+        "阳性名词",
+        "预约；约定",
+        "un entretien（面谈，相关词）",
+        "prendre rendez-vous：预约。"
+      ],
+      [
+        "répéter",
+        "/ʁepete/",
+        "动词",
+        "重复",
+        "redire",
+        "Vous pourriez répéter ?：您能再说一遍吗？"
+      ]
+    ],
+    "reviews": [
+      [
+        "说明困难 + 具体请求",
+        "Je débute en français. Vous pourriez… ?",
+        "Je débute en français. Vous pourriez parler plus lentement ?",
+        "我刚开始学法语。您可以说慢一点吗？"
+      ],
+      [
+        "复述下一步 + 确认",
+        "Je dois…, c’est bien ça ?",
+        "Je dois remplir ce formulaire, c’est bien ça ?",
+        "我需要填这张表，是这样吗？"
+      ]
+    ],
+    "culture": "请求重复是在让交流继续。与陌生人、工作人员通常使用 vous。如果仍然无法理解，可以礼貌询问能否用英语。完整课件还有问路、电话、办事窗口与 tu / vous 的选择。"
+  },
+  {
+    "id": "fr-classmates",
+    "sourcePages": "第 1–2 页，第一节课认识同学",
+    "objective": "自然认识同学，说明自己刚到法国，并把问题问回去。",
+    "lines": [
+      [
+        "Vous",
+        "Salut, cette place est libre ?",
+        "嗨，这个座位空着吗？",
+        "cette place est libre",
+        "这个座位空着吗"
+      ],
+      [
+        "Camille",
+        "Oui, vas-y.",
+        "空着，坐吧。",
+        "vas-y",
+        "坐吧"
+      ],
+      [
+        "Vous",
+        "Merci. C’est bien le cours du master El Karoui ?",
+        "谢谢。这是 El Karoui 硕士项目的课，对吗？",
+        "C’est bien le cours",
+        "这是"
+      ],
+      [
+        "Camille",
+        "Oui. Toi aussi, tu es dans le master ?",
+        "是的。你也在读这个硕士项目吗？",
+        "Toi aussi",
+        "你也"
+      ],
+      [
+        "Vous",
+        "Oui, je suis en M2 à Sorbonne Université. Je viens d’arriver en France, donc je découvre encore un peu tout.",
+        "是的，我在索邦大学读硕士二年级。我刚到法国，所以一切还在慢慢熟悉。",
+        "Je viens d’arriver",
+        "我刚到"
+      ],
+      [
+        "Camille",
+        "Tu viens d’où ?",
+        "你来自哪里？",
+        "Tu viens d’où",
+        "你来自哪里"
+      ],
+      [
+        "Vous",
+        "Je viens de Chine. J’ai surtout étudié les maths et les probabilités avant de venir ici. Et toi, tu as fait quelle école ?",
+        "我来自中国。来这里之前主要学数学和概率论。你呢，你之前在哪所学校？",
+        "Et toi",
+        "你呢"
+      ],
+      [
+        "Camille",
+        "J’ai fait une école d’ingénieurs à Lyon.",
+        "我之前在里昂的一所工程师学校读书。",
+        "une école d’ingénieurs",
+        "一所工程师学校"
+      ]
+    ],
+    "grammar": [
+      [
+        "venir de + 动词原形：刚做了某事",
+        "Je viens d’arriver 表示我刚到。de 在 arriver 前省音为 d’。",
+        "Je viens de commencer le cours.",
+        "我刚开始上这门课。",
+        "Je viens de Chine 的 de 后接地点，表示来自中国。"
+      ],
+      [
+        "Et toi ?：把交流接下去",
+        "回答后加 Et toi ?，用重读代词 toi 把问题自然交给对方。",
+        "Je suis en M2. Et toi ?",
+        "我读硕士二年级。你呢？",
+        "正式交流用 Et vous ?"
+      ]
+    ],
+    "phrases": [
+      [
+        "vas-y",
+        "/vazi/",
+        "请吧；去吧",
+        "同辈间随意的说法；正式场合用 allez-y。"
+      ],
+      [
+        "Tu viens d’où",
+        "/ty vjɛ̃ du/",
+        "你来自哪里",
+        "où 问地点，de 在元音前省音。"
+      ],
+      [
+        "Et toi",
+        "/e twa/",
+        "你呢",
+        "邀请对方继续，而不是结束回答。"
+      ]
+    ],
+    "vocab": [
+      [
+        "libre",
+        "/libʁ/",
+        "形容词",
+        "空着的；有空的",
+        "disponible",
+        "une place libre：空座位。"
+      ],
+      [
+        "le cours",
+        "/kuʁ/",
+        "阳性名词",
+        "课程；课",
+        "la leçon（课文或一课）",
+        "aller en cours：去上课。"
+      ],
+      [
+        "découvrir",
+        "/dekuvʁiʁ/",
+        "动词",
+        "发现；开始了解",
+        "explorer（探索）",
+        "je découvre：我正在认识、了解。"
+      ]
+    ],
+    "reviews": [
+      [
+        "先聊共同情境",
+        "Salut, c’est bien… ? Toi aussi, tu… ?",
+        "Salut, c’est bien le cours de maths ? Toi aussi, tu es en M2 ?",
+        "嗨，这是数学课对吗？你也读硕士二年级吗？"
+      ],
+      [
+        "信息 + 背景 + 问回去",
+        "Je… Je viens de… Et toi ?",
+        "Je suis en M2. Je viens d’arriver ici. Et toi ?",
+        "我读硕士二年级，刚到这里。你呢？"
+      ]
+    ],
+    "culture": "同学间经常用 tu，称呼老师或行政人员通常先用 vous。M2 指硕士第二年；école d’ingénieurs 是工程师学校。请按自己情况替换角色信息。完整课件还包含住处、约自习、吃饭、职业方向和群聊。"
+  }
+]

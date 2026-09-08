@@ -15,11 +15,14 @@ const display = Playfair_Display({
 
 export const metadata: Metadata = {
   icons: { icon: '/english/favicon.svg' },
-  title: 'Little English｜每天听懂一点，开口多一点',
-  description: '从 BBC 英语短片段开始，通过场景听写、逐句跟读、词汇与错题复习，把英语用进生活。进度本地保存。',
+  title: 'Language Notebook｜英语与法语学习讲义',
+  description:
+    '六门英语与法语课程：完整课件、听写、逐句跟读、语法词汇和表达练习。学习笔记保存在本机。',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
       <body className={`${sans.variable} ${display.variable}`}>{children}</body>

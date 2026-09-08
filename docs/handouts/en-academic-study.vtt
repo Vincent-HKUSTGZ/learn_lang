@@ -1,0 +1,21 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.280
+I follow the unbiasedness argument. What I don’t see is why the variance must be lower.
+我理解无偏性的论证。我不明白的是，为什么方差一定更小。
+
+00:00:06.280 --> 00:00:13.920
+My intuition was that the two payoffs should move in opposite directions because they are generated using opposite shocks.
+我的直觉是，两个收益应该向相反方向变动，因为它们由相反的扰动生成。
+
+00:00:13.920 --> 00:00:24.860
+That sounds plausible, but I think we need to be more precise. Using opposite shocks does not automatically guarantee that the payoffs are negatively correlated.
+这听起来有道理，但我认为我们需要更严谨一些。相反扰动并不能自动保证收益负相关。
+
+00:00:24.860 --> 00:00:28.180
+You’re right. I phrased that too strongly.
+你说得对。我刚才的表述太绝对了。
+
+00:00:28.180 --> 00:00:33.420
+Could we write the variance explicitly? That might make the condition clearer.
+我们可以把方差明确写出来吗？这样或许能让条件更清楚。
