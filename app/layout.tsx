@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Noto_Sans_SC, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   title: 'Language Notebook｜英语与法语学习讲义',
   description:
     '六门英语与法语课程：完整课件、听写、逐句跟读、语法词汇和表达练习。学习笔记保存在本机。',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({

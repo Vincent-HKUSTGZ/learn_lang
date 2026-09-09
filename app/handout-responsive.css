@@ -1,0 +1,412 @@
+/* One handout, reflowing from desktop to phone without hiding controls. */
+.handout-app {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.handout-app *,
+.handout-app *::before,
+.handout-app *::after {
+  box-sizing: border-box;
+}
+.handout-app
+  :is(
+    .simple-course,
+    .section-body,
+    .parallel-heading > *,
+    .knowledge-body,
+    .source-page,
+    .review-templates,
+    .audio-middle
+  ) {
+  min-width: 0;
+}
+.handout-app
+  :is(
+    h1,
+    h2,
+    h3,
+    p,
+    summary,
+    .source-page-text,
+    .saved-draft,
+    .inline-dictation,
+    .course-book-cover span
+  ) {
+  overflow-wrap: anywhere;
+}
+.handout-app :is(input:not([type='checkbox']), textarea, select) {
+  font-size: 1rem;
+}
+.handout-app textarea {
+  width: 100%;
+  max-width: 100%;
+  resize: vertical;
+}
+.handout-app :is(button, a, summary, select, input[type='checkbox']) {
+  touch-action: manipulation;
+}
+.handout-app :is(button, a, summary, input, select, textarea):focus-visible {
+  outline: 2px solid #3673a3;
+  outline-offset: 3px;
+}
+.handout-app
+  :is(
+    .simple-course-meta,
+    .simple-course footer,
+    .simple-library-footer,
+    .handout-nav
+  ) {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.handout-app .simple-course-english {
+  font-style: normal;
+  line-height: 1.7;
+}
+.handout-app .simple-course {
+  display: flex;
+  flex-direction: column;
+}
+.handout-app .simple-course > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.handout-app .simple-course footer {
+  margin-top: auto;
+}
+.handout-app
+  :is(
+    .handout-actions button,
+    .handout-actions > a,
+    .source-tools button,
+    .recorder-actions button,
+    .recording-links > *,
+    .handout-nav > a
+  ) {
+  min-height: 44px;
+  height: auto;
+  padding-block: 10px;
+  white-space: normal;
+}
+.handout-app
+  :is(
+    .handout-section > summary,
+    .optional-practice > summary,
+    .source-page > summary,
+    .knowledge-item > summary
+  ) {
+  min-height: 44px;
+  cursor: pointer;
+}
+.handout-app .handout-section h2 {
+  min-width: 0;
+}
+.handout-app .audio-player {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+}
+.handout-app .audio-middle > div:first-child {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 4px;
+}
+.handout-app .audio-middle b {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.handout-app .audio-middle span {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: normal;
+}
+.handout-app .audio-middle [data-slot='slider'] > div {
+  min-height: 36px;
+}
+.handout-app .audio-middle [data-slot='slider-thumb'] {
+  width: 18px;
+  height: 18px;
+}
+.handout-app :is(.audio-play, .clip-control .audio-play) {
+  width: 44px;
+  height: 44px;
+}
+.handout-app .audio-options {
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.handout-app .audio-options :is(button, select) {
+  display: grid;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  place-items: center;
+}
+.handout-app .audio-options select {
+  display: block;
+  width: 76px;
+  padding: 6px;
+}
+.handout-app .audio-options button:last-child {
+  display: grid;
+}
+.handout-app .audio-error {
+  grid-column: 1 / -1;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.pdf-handout .parallel-heading .clip-control {
+  position: relative;
+}
+.handout-app .clip-control .audio-error {
+  top: 48px;
+  min-width: 0;
+  width: min(210px, 65vw);
+}
+.handout-app .recorder-actions,
+.handout-app .recording-links {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.handout-app .recorder-actions > span {
+  font-size: 0.875rem;
+}
+.pdf-handout .blank-group {
+  max-width: calc(100% - 6px);
+  flex-wrap: wrap;
+}
+.pdf-handout .blank-group input {
+  flex-shrink: 1;
+  max-width: calc(100% - 36px);
+  min-height: 44px;
+  font-size: 1rem;
+}
+.pdf-handout .read-page {
+  min-height: 48px;
+  cursor: pointer;
+}
+.pdf-handout .read-page input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.pdf-handout .study-video figcaption {
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.pdf-handout .study-video-title small {
+  font-size: 0.75rem;
+}
+
+@media screen and (max-width: 960px) {
+  .handout-app .simple-library {
+    padding: 36px 24px;
+  }
+  .handout-app .simple-course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .handout-app .handout {
+    width: calc(100% - 32px);
+    padding: 32px;
+  }
+  .handout-app .handout-nav {
+    padding: 16px 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+  }
+  .handout-app .audio-player {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+  .handout-app .audio-options {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    border-top: 1px solid #e1e6ed;
+    padding-top: 8px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .handout-app .simple-library {
+    padding: 24px max(16px, env(safe-area-inset-right)) 36px
+      max(16px, env(safe-area-inset-left));
+  }
+  .handout-app .simple-library > header {
+    margin-bottom: 22px;
+  }
+  .handout-app .simple-library h1 {
+    font-size: 1.65rem;
+    line-height: 1.4;
+  }
+  .handout-app .simple-library > header > p:last-child {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .handout-app .simple-course-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .handout-app .simple-course .course-book-cover {
+    min-height: 145px;
+    padding: 20px;
+    gap: 14px;
+  }
+  .handout-app .simple-course > div:last-child {
+    padding: 20px;
+  }
+  .handout-app .simple-library-footer {
+    display: block;
+  }
+  .handout-app .language-switch {
+    width: 100%;
+    margin-top: 22px;
+  }
+  .handout-app .language-switch button {
+    flex: 1;
+    min-width: 0;
+    min-height: 60px;
+    padding: 10px 8px;
+  }
+  .handout-app .language-switch span {
+    display: block;
+    margin: 2px 0 0;
+  }
+  .handout-app .handout {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+    padding: 20px max(16px, env(safe-area-inset-right))
+      max(32px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+  }
+  .handout-app .handout-nav {
+    padding: max(8px, env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right)) 4px
+      max(16px, env(safe-area-inset-left));
+    align-items: flex-start;
+  }
+  .handout-app .handout-nav > span {
+    align-self: center;
+  }
+  .pdf-handout .pdf-course-heading {
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+  .pdf-handout .pdf-course-heading h1 {
+    font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+  .pdf-handout .course-subtitle {
+    font-size: 1.25rem;
+  }
+  .pdf-handout .handout-section h2 {
+    font-size: 1.35rem;
+    line-height: 1.6;
+  }
+  .pdf-handout .handout-section {
+    margin-top: 24px;
+  }
+  .pdf-handout .teacher-instruction {
+    padding: 10px 12px !important;
+    line-height: 1.8;
+  }
+  .pdf-handout .handout-prose {
+    font-size: 1rem;
+    line-height: 1.95;
+  }
+  .pdf-handout .inline-dictation {
+    font-size: 1rem;
+    line-height: 2.7;
+  }
+  .pdf-handout .blank-group small {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .pdf-handout .handout-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 10px;
+  }
+  .pdf-handout .handout-actions > :first-child {
+    grid-column: 1 / -1;
+  }
+  .pdf-handout .handout-actions > :is(button, a) {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    font-size: 0.9375rem;
+  }
+  .pdf-handout .parallel-heading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .pdf-handout .parallel-heading > :not(.clip-control) {
+    flex: 1;
+  }
+  .pdf-handout .knowledge-body,
+  .pdf-handout .answer-reference {
+    padding: 14px;
+  }
+  .pdf-handout .knowledge-item > summary {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .pdf-handout .source-tools {
+    flex-direction: column;
+  }
+  .pdf-handout .source-tools input {
+    width: 100%;
+    min-height: 44px;
+  }
+  .pdf-handout .source-page > summary {
+    padding: 12px;
+  }
+  .pdf-handout .source-page-text {
+    font-size: 1rem;
+    line-height: 1.9;
+    padding: 4px 12px 18px;
+  }
+  .pdf-handout .review-templates {
+    padding: 0 14px;
+  }
+  .pdf-handout .study-video-stage {
+    aspect-ratio: 4 / 3;
+  }
+  .pdf-handout .study-video-title {
+    top: 7%;
+    gap: 5px;
+  }
+  .pdf-handout .study-video-title strong {
+    font-size: 1.125rem;
+  }
+  .pdf-handout .study-video-title span {
+    font-size: 0.75rem;
+  }
+  .pdf-handout .study-video video::cue {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handout-app *,
+  .handout-app *::before,
+  .handout-app *::after {
+    scroll-behavior: auto;
+    animation: none;
+    transition: none;
+  }
+}
+
+@media print {
+  .handout-app
+    :is(.audio-player, .clip-control, .handout-nav, .handout-actions) {
+    display: none;
+  }
+}

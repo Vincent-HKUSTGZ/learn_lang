@@ -3,6 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import './english.css';
 @import './handout.css';
+@import './handout-responsive.css';
 
 @custom-variant dark (&:is(.dark *));
 

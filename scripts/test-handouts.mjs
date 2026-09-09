@@ -127,7 +127,9 @@ assert(source.includes('E₀ = (1 + p)/p².'));
 assert(source.includes('½ Var(Y(Z))'));
 const component = read('components/handout-lesson.tsx');
 assert.equal((component.match(/<Section\s+n=/g) || []).length, 7);
-const blindListening = component.match(/<Section\s+n="二"[\s\S]*?<\/Section>/)?.[0];
+const blindListening = component.match(
+  /<Section\s+n="二"[\s\S]*?<\/Section>/,
+)?.[0];
 assert(blindListening?.includes('<AudioPlayer'));
 assert(!blindListening?.includes('<Video'));
 assert(component.includes('language={meta.language} subtitles'));
@@ -139,6 +141,37 @@ assert(component.includes('readPages'));
 assert(component.includes('aria-live="polite"'));
 assert.equal(clips, 88);
 assert.equal(lines, 40);
+const responsive = read('app/handout-responsive.css');
+assert(
+  read('app/globals.css').indexOf("'./handout-responsive.css'") >
+    read('app/globals.css').indexOf("'./handout.css'"),
+);
+assert(/@media screen and \(max-width: 960px\)/.test(responsive));
+assert(/@media screen and \(max-width: 640px\)/.test(responsive));
+assert(
+  /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/.test(responsive),
+);
+assert(/grid-template-columns:\s*minmax\(0, 1fr\)/.test(responsive));
+assert(responsive.includes('safe-area-inset-bottom'));
+assert(responsive.includes('overflow-wrap: anywhere'));
+assert(responsive.includes('min-height: 44px'));
+assert(
+  /\.audio-options button:last-child\s*\{\s*display: grid/.test(responsive),
+  'Keep replay available on narrow phones',
+);
+assert(component.includes('autoCorrect="off"'));
+for (const path of ['pages-src/index.html', 'pages-src/lesson/index.html']) {
+  const html = read(path);
+  assert(html.includes('width=device-width'));
+  assert(html.includes('viewport-fit=cover'));
+  assert(
+    !/user-scalable=no|maximum-scale=1/.test(html),
+    'Do not disable pinch zoom',
+  );
+}
 console.log(
   `PASS: 6 courses / 95 pages / ${lines} source-aligned blanks / ${clips} voice clips / 6 timing-aligned videos; language isolation, answers, accents, privacy, formula and seven-section checks.`,
+);
+console.log(
+  'PASS: responsive stylesheet order, phone/tablet layouts, touch targets, safe areas, replay visibility and zoom-friendly viewports.',
 );

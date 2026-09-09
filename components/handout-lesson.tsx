@@ -358,6 +358,8 @@ export default function HandoutLesson() {
                       lang={meta.language}
                       autoComplete="off"
                       autoCapitalize="off"
+                      autoCorrect="off"
+                      enterKeyHint="done"
                       spellCheck={false}
                       aria-label={`第 ${i + 1} 空：${l[4]}`}
                       aria-invalid={checked && !correct}
